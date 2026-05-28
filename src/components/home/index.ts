@@ -1,0 +1,14 @@
+export { HeroCarousel } from './HeroCarousel';
+export { StatsBar } from './StatsBar';
+export { FoundationsSection } from './FoundationsSection';
+export { ProductsSection } from './ProductsSection';
+export { PeopleSection } from './PeopleSection';
+export { AboutSection } from './AboutSection';
+export { AchievementsSection } from './AchievementsSection';
+export { BlogSection } from './BlogSection';
+export { ClientsSection } from './ClientsSection';
+export { CTASection } from './CTASection';
+export { OngoingProjectsSection } from './OngoingProjectsSection';
+export { UpcomingProjectsSection } from './UpcomingProjectsSection';
+export { TestimonialsSection } from './TestimonialsSection'; 
+export { ESGSection } from './ESGSection' 
