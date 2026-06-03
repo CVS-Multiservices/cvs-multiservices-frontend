@@ -1,7 +1,7 @@
 import { FetchResult } from '../types';
 
-export const API_BASE_URL: string = 'https://cvs-backend-production-695c.up.railway.app/api';
-
+// export const API_BASE_URL: string = 'https://cvs-backend-production-695c.up.railway.app/api';
+export const API_BASE_URL: string = 'https://cvs-multiservices-backend-production.up.railway.app/api';
 // ==================== ID MAPPER ====================
 // Maps MongoDB _id → id for every item
 
