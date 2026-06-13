@@ -16,6 +16,7 @@ import {
 import { Link } from 'react-router-dom';
 import AnimatedSection from '../components/AnimatedSection';
 import { WhatsAppButton } from '@/components/ui';
+import SEOMeta from '../components/SEOMeta';
 import dataService from '../services/dataService';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -121,8 +122,32 @@ export default function Dubai() {
       ]
     : [];
 
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cvsmultiservices.com';
+
+  const dubaiSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": `${origin}/dubai#webpage`,
+    "url": `${origin}/dubai`,
+    "name": "CVS Multi Services Dubai Office",
+    "description": "CVS Multi Services Middle East Operations. Specialized industrial, oilfield, water treatment, and facility management services in UAE.",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": dubaiBranch?.phone || "",
+      "contactType": "international office",
+      "areaServed": "AE",
+      "availableLanguage": ["en", "ar"]
+    }
+  };
+
   return (
     <div className="section-navy min-h-screen">
+      <SEOMeta
+        title="Dubai Office & Middle East Operations | CVS Multi Services"
+        description="CVS Multi Services is expanding in the Middle East. Contact our Abu Dhabi/Dubai representatives for specialized oilfield, ETP, and seismic services in the UAE."
+        keywords="CVS Dubai, UAE office, Abu Dhabi operations, Middle East oilfield services, ADNOC partners"
+        schema={dubaiSchema}
+      />
       <WhatsAppButton />
 
       {/* ── Hero ── */}

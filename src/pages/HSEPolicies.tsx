@@ -11,6 +11,7 @@ import {
 } from 'lucide-react';
 import AnimatedSection from '../components/AnimatedSection';
 import { WhatsAppButton } from '@/components/ui';
+import SEOMeta from '../components/SEOMeta';
 
 const managementDuties = [
   'A safe working environment',
@@ -40,8 +41,30 @@ const commitments = [
 ];
 
 export default function HSEPolicies() {
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cvsmultiservices.com';
+
+  const hseSchema = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "@id": `${origin}/policies#webpage`,
+    "url": `${origin}/policies`,
+    "name": "CVS Multi Services HSE Policies & Safety Standards",
+    "description": "Read our Health, Safety, and Environment (HSE) policy commitments, management duties, worker safety obligations, and ISO standard compliances.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "CVS Multi Services Private Limited",
+      "url": `${origin}/`
+    }
+  };
+
   return (
     <div style={{ background: '#080f1e' }}>
+      <SEOMeta
+        title="HSE Policies & Safety Standards | CVS Multi Services"
+        description="Learn about our UKCert-certified ISO 9001:2015, ISO 14001:2015, and ISO 45001:2018 policies. We are committed to a zero-incident safety culture across all sites."
+        keywords="HSE policy, safety standards, ISO 9001, ISO 14001, ISO 45001, industrial safety compliance, zero incident, environmental safety"
+        schema={hseSchema}
+      />
       <WhatsAppButton />
 
       {/* ── Hero ── */}
