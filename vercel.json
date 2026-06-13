@@ -1,4 +1,20 @@
 {
+  "redirects": [
+    { "source": "/service.html", "destination": "/services", "permanent": true },
+    { "source": "/seismic-survey-2d-3d.html", "destination": "/services", "permanent": true },
+    { "source": "/mobile-effluent-treatment-plant.html", "destination": "/services", "permanent": true },
+    { "source": "/waste-management-services.html", "destination": "/services", "permanent": true },
+    { "source": "/team.html", "destination": "/about#team", "permanent": true },
+    { "source": "/foundations.html", "destination": "/about#timeline", "permanent": true },
+    { "source": "/chetankumar-shah-director-cvs.html", "destination": "/about#team", "permanent": true },
+    { "source": "/arunaben-shah-director-cvs.html", "destination": "/about#team", "permanent": true },
+    { "source": "/swapnil-shah-ceo-cvs.html", "destination": "/about#team", "permanent": true },
+    { "source": "/gallery.html", "destination": "/gallery", "permanent": true },
+    { "source": "/hse-policies.html", "destination": "/policies", "permanent": true },
+    { "source": "/certifications.html", "destination": "/policies", "permanent": true },
+    { "source": "/contact.html", "destination": "/contact", "permanent": true },
+    { "source": "/join-us.php", "destination": "/careers", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
