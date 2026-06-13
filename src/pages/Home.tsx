@@ -120,7 +120,7 @@ export default function Home() {
     <div className="section-navy">
       <SEOMeta
         title="CVS Multi Services Pvt. Ltd. | India's Leading Industrial Services Provider"
-        description="CVS Multi Services Pvt. Ltd. is India's leading industrial services company. We specialize in 2D/3D seismic surveys, mobile effluent treatment plants (ETP), industrial waste management, and equipment supply."
+        description="The group had the humble beginnings in the year 1997, as the suppliers of cotton waste. From there they diversified into the supply of Industrial safety goods."
         keywords="CVS Multi Services, seismic survey, ETP, effluent treatment plant, waste management, oil & gas, industrial safety, industrial services India"
         schema={homeSchema}
       />
