@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { useEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import AnimatedSection from '../AnimatedSection';
 import { COLORS } from '../../theme';
 import { TeamMember } from '../../types';
@@ -9,6 +10,7 @@ import dataService from '../../services/dataService'; // adjust path if needed
 export function TeamSection() {
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     const fetchTeam = async () => {
@@ -32,6 +34,19 @@ export function TeamSection() {
 
     fetchTeam();
   }, []);
+
+  // Scroll to hash member once team data is loaded
+  useEffect(() => {
+    if (!loading && team.length > 0 && location.hash) {
+      const id = location.hash.replace('#', '');
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }, 300);
+    }
+  }, [loading, team, location.hash]);
 
   // Prevent empty render / animation glitch
   if (loading || team.length === 0) return null;
@@ -98,6 +113,7 @@ export function TeamSection() {
           {team.map((member, i) => (
             <AnimatedSection key={member._id ?? i} delay={i * 0.1}>
               <motion.div
+                id={member.name.toLowerCase().replace(/\s+/g, '-')}
                 whileHover={{ y: -8 }}
                 className="rounded-3xl overflow-hidden group cursor-pointer relative h-full flex flex-col"
                 style={{
