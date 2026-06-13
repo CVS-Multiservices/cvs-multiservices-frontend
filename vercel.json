@@ -13,7 +13,8 @@
     { "source": "/hse-policies.html", "destination": "/policies", "permanent": true },
     { "source": "/certifications.html", "destination": "/policies", "permanent": true },
     { "source": "/contact.html", "destination": "/contact", "permanent": true },
-    { "source": "/join-us.php", "destination": "/careers", "permanent": true }
+    { "source": "/join-us.php", "destination": "/careers", "permanent": true },
+    { "source": "/achievements.html", "destination": "/#achievements", "permanent": true }
   ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }

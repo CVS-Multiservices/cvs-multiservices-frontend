@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import SEOMeta from '../components/SEOMeta';
 import { WhatsAppButton } from '../components/ui';
 import {
@@ -18,7 +20,20 @@ import { CSRSection } from '@/components/about';
 import '../styles/animations.css';
 
 export default function Home() {
+  const location = useLocation();
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cvsmultiservices.com';
+
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.replace('#', '');
+      setTimeout(() => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+  }, [location]);
 
   const homeSchema = [
     {
