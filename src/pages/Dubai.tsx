@@ -37,10 +37,10 @@ interface Branch {
 
 // ─── Static Data (unchanged) ─────────────────────────────────────────────────
 const capabilities = [
-  { icon: Droplets,    title: 'Water Treatment',     desc: 'Advanced effluent treatment and desalination systems serving UAE industrial sector.' },
-  { icon: Wrench,      title: 'Maintenance Services', desc: 'Comprehensive mechanical and electrical maintenance for oil & gas facilities.' },
-  { icon: ShieldCheck, title: 'HSE Compliance',       desc: 'Strict adherence to Dubai Municipality and ADNOC HSE standards.' },
-  { icon: Building2,   title: 'Facility Management',  desc: 'End-to-end industrial facility operations and infrastructure management.' },
+  { icon: Droplets, title: 'Water Treatment', desc: 'Advanced effluent treatment and desalination systems serving UAE industrial sector.' },
+  { icon: Wrench, title: 'Maintenance Services', desc: 'Comprehensive mechanical and electrical maintenance for oil & gas facilities.' },
+  { icon: ShieldCheck, title: 'HSE Compliance', desc: 'Strict adherence to Dubai Municipality and ADNOC HSE standards.' },
+  { icon: Building2, title: 'Facility Management', desc: 'End-to-end industrial facility operations and infrastructure management.' },
 ];
 
 const certifications = [
@@ -51,10 +51,10 @@ const certifications = [
 ];
 
 const stats = [
-  { value: '2018',  label: 'Established in UAE' },
-  { value: '50+',   label: 'UAE Workforce' },
-  { value: '24/7',  label: 'Operations' },
-  { value: '100%',  label: 'Safety Record' },
+  { value: '2018', label: 'Established in UAE' },
+  { value: '50+', label: 'UAE Workforce' },
+  { value: '24/7', label: 'Operations' },
+  { value: '100%', label: 'Safety Record' },
 ];
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -104,25 +104,27 @@ export default function Dubai() {
   // ── Build contactItems from dubaiBranch (or fallback to null) ──
   const contactItems = dubaiBranch
     ? [
-        {
-          icon: MapPin,
-          title: 'Address',
-          lines: [dubaiBranch.address ?? 'Dubai, United Arab Emirates'],
-        },
-        {
-          icon: Phone,
-          title: 'Phone',
-          lines: [dubaiBranch.phone ?? ''],
-        },
-        {
-          icon: Mail,
-          title: 'Email',
-          lines: [dubaiBranch.email ?? ''],
-        },
-      ]
+      {
+        icon: MapPin,
+        title: 'Address',
+        lines: [dubaiBranch.address ?? 'Dubai, United Arab Emirates'],
+      },
+      {
+        icon: Phone,
+        title: 'Phone',
+        lines: [dubaiBranch.phone ?? ''],
+      },
+      {
+        icon: Mail,
+        title: 'Email',
+        lines: [dubaiBranch.email ?? ''],
+      },
+    ]
     : [];
 
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cvsmultiservices.com';
+
+
 
   const dubaiSchema = {
     "@context": "https://schema.org",
