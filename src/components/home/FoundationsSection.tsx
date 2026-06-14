@@ -45,7 +45,7 @@ export function FoundationsSection() {
               style={styles.paragraph}
             >
               The people who dream are the people who succeed. Leading India's
-              industrial services since 2002.
+              industrial services since 2017.
             </p>
           </AnimatedSection>
         </div>

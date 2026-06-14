@@ -65,39 +65,7 @@ export function WhyJoinUsSection() {
               family.
             </p>
 
-            {/* Stats Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3 xl:gap-4 mb-7 xl:mb-9">
-              {whyJoinUsStats.map((stat, idx) => {
-                const Icon = statIcons[idx];
-                return (
-                  <div
-                    key={idx}
-                    className="p-3 sm:p-4 xl:p-5 rounded-xl text-center"
-                    style={{
-                      background: 'rgba(212,160,23,0.05)',
-                      border: '1px solid rgba(212,160,23,0.1)',
-                    }}
-                  >
-                    <Icon
-                      className="w-4 h-4 sm:w-5 sm:h-5 xl:w-6 xl:h-6 mx-auto mb-2"
-                      style={{ color: '#d4a017' }}
-                    />
-                    <div
-                      className="text-xl sm:text-2xl xl:text-3xl font-bold font-rajdhani mb-0.5"
-                      style={{ color: '#d4a017' }}
-                    >
-                      {stat.value}
-                    </div>
-                    <div
-                      className="text-[10px] sm:text-xs xl:text-sm uppercase tracking-wider"
-                      style={{ color: 'rgba(255,255,255,0.4)' }}
-                    >
-                      {stat.label}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+           
 
             <Link
               to="/about"
@@ -138,55 +106,14 @@ export function WhyJoinUsSection() {
                     style={{ background: 'linear-gradient(90deg, #d4a017, transparent)' }}
                   />
                   <p className="text-xs sm:text-sm xl:text-base text-white/70">
-                    Join 500+ professionals who are shaping the future of industrial services.
+                    Join us with the professionals who are shaping the future of industrial services.
                   </p>
                 </div>
               </div>
 
-              {/* Floating satisfaction card */}
-              <motion.div
-                className="absolute -top-5 -right-4 sm:-top-6 sm:-right-6 p-4 sm:p-5 xl:p-6 rounded-2xl"
-                style={{
-                  background: 'linear-gradient(135deg, #d4a017, #b8860b)',
-                  boxShadow: '0 20px 50px rgba(212,160,23,0.3)',
-                }}
-                animate={{ y: [0, -8, 0] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              >
-                <div
-                  className="text-2xl sm:text-3xl xl:text-4xl font-bold text-white font-rajdhani"
-                >
-                  98%
-                </div>
-                <div
-                  className="text-[10px] sm:text-xs xl:text-sm text-white/80 uppercase tracking-wider"
-                >
-                  Employee Satisfaction
-                </div>
-              </motion.div>
-
+         
               {/* Extra floating badge for xl+ screens */}
-              <motion.div
-                className="hidden xl:block absolute -bottom-6 -left-6 p-5 rounded-2xl"
-                style={{
-                  background: 'rgba(10,36,71,0.9)',
-                  border: '1px solid rgba(212,160,23,0.3)',
-                  boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
-                  backdropFilter: 'blur(12px)',
-                }}
-                animate={{ y: [0, 8, 0] }}
-                transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.5 }}
-              >
-                <div className="text-3xl font-bold font-rajdhani" style={{ color: '#d4a017' }}>
-                  25+
-                </div>
-                <div
-                  className="text-xs uppercase tracking-wider"
-                  style={{ color: 'rgba(255,255,255,0.5)' }}
-                >
-                  Years of Excellence
-                </div>
-              </motion.div>
+             
             </div>
           </AnimatedSection>
         </div>

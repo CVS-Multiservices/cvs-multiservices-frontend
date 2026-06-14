@@ -313,7 +313,7 @@ We look forward to implementing the insights gained from the conclave into our o
 export const achievements = [
   { icon: Target, title: 'ISO Certified', desc: 'Quality, Environment & Safety management systems certified', year: '2015' },
   { icon: TrendingUp, title: '500+ Projects', desc: 'Successfully completed projects across all service verticals', year: '2024' },
-  { icon: Star, title: 'Since 2002', desc: 'Over 25 years of excellence in industrial services', year: '2002' },
+  { icon: Star, title: 'Since 2017', desc: 'Over 25 years of excellence in industrial services', year: '2017' },
 ];
 
 
@@ -346,7 +346,7 @@ export const team = [
 
 export const timelineEvents = [
   {
-    year: '2002',
+    year: '2017',
     title: 'Humble Beginnings',
     subtitle: 'Foundation',
     description:
@@ -356,7 +356,7 @@ export const timelineEvents = [
     featured: false,
   },
   {
-    year: '2002',
+    year: '2017',
     title: 'Industrial Safety Goods',
     subtitle: 'First Diversification',
     description:

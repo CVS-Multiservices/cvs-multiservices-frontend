@@ -4,7 +4,7 @@ import { ArrowRight, Users } from 'lucide-react';
 import AnimatedSection from '../AnimatedSection';
 
 const infoItems = [
-  { label: 'Founded', value: '2002' },
+  { label: 'Founded', value: '2017' },
   { label: 'Headquarters', value: 'Mehsana, GJ' },
   { label: 'Certifications', value: 'ISO 9001' },
   { label: 'Coverage', value: 'Pan India' },
@@ -44,7 +44,7 @@ export function PeopleSection() {
                     style={{ background: 'linear-gradient(90deg, #d4a017, transparent)' }}
                   />
                   <p className="text-sm text-white/70">
-                    Visionary leadership driving excellence across industrial sectors since 2002.
+                    Visionary leadership driving excellence across industrial sectors since 2017.
                   </p>
                 </div>
               </div>

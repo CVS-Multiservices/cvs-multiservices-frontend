@@ -32,7 +32,7 @@ export function AboutSection() {
               className="mb-6 leading-relaxed text-base xl:text-lg"
               style={{ color: COLORS.aboutTextSoft, textAlign: 'justify' }}
             >
-              CVS Multi Services Private Limited started its journey in 2002 with humble beginnings as a supplier of cotton waste. With time and consistent effort, the company expanded into the supply of industrial safety goods, building a strong foundation in the market.
+              CVS Multi Services Private Limited started its journey in 2017 with humble beginnings as a supplier of cotton waste. With time and consistent effort, the company expanded into the supply of industrial safety goods, building a strong foundation in the market.
             </p>
 
             <p

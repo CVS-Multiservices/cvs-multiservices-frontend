@@ -291,7 +291,7 @@ export default function Dubai() {
                 className="text-sm sm:text-base xl:text-lg leading-relaxed mb-5"
                 style={{ color: 'rgba(255,255,255,0.6)' }}
               >
-                Our Dubai office represents CVS Multi Services' commitment to global expansion and
+                Our Dubai office represents CVS Multi Services for commitment to global expansion and
                 delivering Indian engineering excellence to international markets.
               </p>
               <p
@@ -301,7 +301,7 @@ export default function Dubai() {
                 The facility houses advanced equipment for industrial cleaning, waste management,
                 and specialized oilfield services.
               </p>
-              <div className="space-y-3 xl:space-y-4">
+              {/* <div className="space-y-3 xl:space-y-4">
                 {certifications.map((cert, i) => (
                   <div key={i} className="flex items-center gap-3">
                     <Award
@@ -316,7 +316,7 @@ export default function Dubai() {
                     </span>
                   </div>
                 ))}
-              </div>
+              </div> */}
             </AnimatedSection>
 
             <AnimatedSection direction="right">
