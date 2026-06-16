@@ -16,6 +16,7 @@ import {
 import { Link } from 'react-router-dom';
 import AnimatedSection from '../components/AnimatedSection';
 import { WhatsAppButton } from '@/components/ui';
+import SEOMeta from '../components/SEOMeta';
 import dataService from '../services/dataService';
 
 // ─── Types ───────────────────────────────────────────────────────────────────
@@ -36,10 +37,10 @@ interface Branch {
 
 // ─── Static Data (unchanged) ─────────────────────────────────────────────────
 const capabilities = [
-  { icon: Droplets,    title: 'Water Treatment',     desc: 'Advanced effluent treatment and desalination systems serving UAE industrial sector.' },
-  { icon: Wrench,      title: 'Maintenance Services', desc: 'Comprehensive mechanical and electrical maintenance for oil & gas facilities.' },
-  { icon: ShieldCheck, title: 'HSE Compliance',       desc: 'Strict adherence to Dubai Municipality and ADNOC HSE standards.' },
-  { icon: Building2,   title: 'Facility Management',  desc: 'End-to-end industrial facility operations and infrastructure management.' },
+  { icon: Droplets, title: 'Water Treatment', desc: 'Advanced effluent treatment and desalination systems serving UAE industrial sector.' },
+  { icon: Wrench, title: 'Maintenance Services', desc: 'Comprehensive mechanical and electrical maintenance for oil & gas facilities.' },
+  { icon: ShieldCheck, title: 'HSE Compliance', desc: 'Strict adherence to Dubai Municipality and ADNOC HSE standards.' },
+  { icon: Building2, title: 'Facility Management', desc: 'End-to-end industrial facility operations and infrastructure management.' },
 ];
 
 const certifications = [
@@ -50,10 +51,10 @@ const certifications = [
 ];
 
 const stats = [
-  { value: '2018',  label: 'Established in UAE' },
-  { value: '50+',   label: 'UAE Workforce' },
-  { value: '24/7',  label: 'Operations' },
-  { value: '100%',  label: 'Safety Record' },
+  { value: '2018', label: 'Established in UAE' },
+  { value: '50+', label: 'UAE Workforce' },
+  { value: '24/7', label: 'Operations' },
+  { value: '100%', label: 'Safety Record' },
 ];
 
 // ─── Component ───────────────────────────────────────────────────────────────
@@ -103,26 +104,52 @@ export default function Dubai() {
   // ── Build contactItems from dubaiBranch (or fallback to null) ──
   const contactItems = dubaiBranch
     ? [
-        {
-          icon: MapPin,
-          title: 'Address',
-          lines: [dubaiBranch.address ?? 'Dubai, United Arab Emirates'],
-        },
-        {
-          icon: Phone,
-          title: 'Phone',
-          lines: [dubaiBranch.phone ?? ''],
-        },
-        {
-          icon: Mail,
-          title: 'Email',
-          lines: [dubaiBranch.email ?? ''],
-        },
-      ]
+      {
+        icon: MapPin,
+        title: 'Address',
+        lines: [dubaiBranch.address ?? 'Dubai, United Arab Emirates'],
+      },
+      {
+        icon: Phone,
+        title: 'Phone',
+        lines: [dubaiBranch.phone ?? ''],
+      },
+      {
+        icon: Mail,
+        title: 'Email',
+        lines: [dubaiBranch.email ?? ''],
+      },
+    ]
     : [];
+
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cvsmultiservices.com';
+
+
+
+  const dubaiSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": `${origin}/dubai#webpage`,
+    "url": `${origin}/dubai`,
+    "name": "CVS Multi Services Dubai Office",
+    "description": "CVS Multi Services Middle East Operations. Specialized industrial, oilfield, water treatment, and facility management services in UAE.",
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": dubaiBranch?.phone || "",
+      "contactType": "international office",
+      "areaServed": "AE",
+      "availableLanguage": ["en", "ar"]
+    }
+  };
 
   return (
     <div className="section-navy min-h-screen">
+      <SEOMeta
+        title="Dubai Office & Middle East Operations | CVS Multi Services"
+        description="CVS Multi Services is expanding in the Middle East. Contact our Abu Dhabi/Dubai representatives for specialized oilfield, ETP, and seismic services in the UAE."
+        keywords="CVS Dubai, UAE office, Abu Dhabi operations, Middle East oilfield services, ADNOC partners"
+        schema={dubaiSchema}
+      />
       <WhatsAppButton />
 
       {/* ── Hero ── */}

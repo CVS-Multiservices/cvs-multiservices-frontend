@@ -7,6 +7,7 @@ import MultipleWays from '../components/contact/MultipleWays';
 import ContactForm from '../components/contact/ContactForm';
 import BranchLocations from '../components/contact/BranchLocations';
 import ContactCTA from '../components/contact/ContactCTA';
+import SEOMeta from '../components/SEOMeta';
 
 export default function Contact() {
   const [searchParams] = useSearchParams();
@@ -36,8 +37,30 @@ export default function Contact() {
     }
   }, [jobTitle, jobId]);
 
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cvsmultiservices.com';
+
+  const contactSchema = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "@id": `${origin}/contact#webpage`,
+    "url": `${origin}/contact`,
+    "name": "Contact CVS Multi Services",
+    "description": "Get in touch with CVS Multi Services Private Limited. Reach our offices in Mehsana (Gujarat) and Abu Dhabi/Dubai (UAE).",
+    "publisher": {
+      "@type": "Organization",
+      "name": "CVS Multi Services Private Limited",
+      "url": `${origin}/`
+    }
+  };
+
   return (
     <div style={{ background: '#080f1e' }}>
+      <SEOMeta
+        title="Contact Us | Get in Touch with CVS Multi Services"
+        description="Contact CVS Multi Services Private Limited. Visit our headquarters in Mehsana, Gujarat, or reach out to our team for project inquiries, quotes, and support."
+        keywords="contact CVS, CVS phone number, Mehsana office address, industrial services quote, oil & gas contract contact"
+        schema={contactSchema}
+      />
       <PageHero
         title="Contact Us"
         subtitle="Get In Touch"

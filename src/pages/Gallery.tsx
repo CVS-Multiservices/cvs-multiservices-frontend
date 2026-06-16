@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import AnimatedSection from '../components/AnimatedSection';
 import { WhatsAppButton } from '@/components/ui';
+import SEOMeta from '../components/SEOMeta';
 import { Gallery as GalleryType } from '../types';
 import dataService from '../services/dataService';
 
@@ -589,8 +590,30 @@ export default function Gallery() {
     );
   }
 
+  const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cvsmultiservices.com';
+
+  const gallerySchema = {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "@id": `${origin}/gallery#webpage`,
+    "url": `${origin}/gallery`,
+    "name": "CVS Multi Services Project Gallery",
+    "description": "Visual showcase of CVS Multi Services operations including effluent treatment plants, seismic surveys, waste management, and safety standards.",
+    "publisher": {
+      "@type": "Organization",
+      "name": "CVS Multi Services Private Limited",
+      "url": `${origin}/`
+    }
+  };
+
   return (
     <div style={{ background: '#080f1e' }}>
+      <SEOMeta
+        title="Media Gallery & Project Showcases | CVS Multi Services"
+        description="Browse photos and videos from our field operations, including active ETP sites, seismic survey camps, waste management projects, and client testimonials."
+        keywords="CVS project gallery, seismic survey photos, mobile ETP images, field operations, project visual showcase"
+        schema={gallerySchema}
+      />
       <WhatsAppButton />
 
       {/* ── Hero ── */}
