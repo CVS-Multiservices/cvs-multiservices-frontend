@@ -1,4 +1,5 @@
 export { HeroCarousel } from './HeroCarousel';
+export { AnimatedCarousel } from './AnimatedCarousel';
 export { StatsBar } from './StatsBar';
 export { FoundationsSection } from './FoundationsSection';
 export { ProductsSection } from './ProductsSection';

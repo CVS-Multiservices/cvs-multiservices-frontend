@@ -21,7 +21,8 @@ export function ServiceCard({ service, onClick }: ServiceCardProps) {
       className={`group cursor-pointer rounded-2xl xl:rounded-3xl overflow-hidden
                   flex flex-col md:flex-row
                   ${isEven ? '' : 'md:flex-row-reverse'}
-                  relative`}
+                  relative
+                  md:items-stretch`}
       style={{
         background: COLORS.cardBgMedium,
         border: `1px solid ${COLORS.borderLight}`,
@@ -38,10 +39,11 @@ export function ServiceCard({ service, onClick }: ServiceCardProps) {
         el.style.boxShadow = COLORS.serviceCardShadow;
       }}
     >
-      {/* ── Image Section ── */}
+      {/* ── Image Section (full height on desktop) ── */}
       <div
         className="relative w-full md:w-2/5 xl:w-[38%] 2xl:w-[36%]
-                   h-56 sm:h-64 md:h-72 lg:h-80 xl:h-96 2xl:h-[440px]
+                   h-56 sm:h-64
+                   md:h-auto md:self-stretch
                    overflow-hidden flex-shrink-0"
       >
         <img
@@ -119,7 +121,7 @@ export function ServiceCard({ service, onClick }: ServiceCardProps) {
         {/* Description */}
         <p
           className="text-sm sm:text-base xl:text-lg 2xl:text-xl
-                     leading-relaxed mb-5 xl:mb-6 max-w-xl xl:max-w-2xl"
+             leading-relaxed mb-5 xl:mb-6 max-w-xl xl:max-w-2xl text-justify"
           style={{ color: COLORS.textSecondary }}
         >
           {service.shortDesc}

@@ -12,9 +12,8 @@ import {
   ClientsSection,
   CTASection,
   OngoingProjectsSection,
-  UpcomingProjectsSection,
   TestimonialsSection,
-  ESGSection
+  AnimatedCarousel
 } from '../components/home';
 import { CSRSection } from '@/components/about';
 import '../styles/animations.css';
@@ -140,7 +139,7 @@ export default function Home() {
         schema={homeSchema}
       />
       <WhatsAppButton />
-      <HeroCarousel />
+      <AnimatedCarousel />
       <StatsBar />
       <FoundationsSection />
       <AboutSection />

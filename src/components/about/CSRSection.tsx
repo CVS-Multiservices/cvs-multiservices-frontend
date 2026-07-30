@@ -39,22 +39,28 @@ function PlaceholderImage({
   );
 }
 
-// ─── CSR Card ─────────────────────────────────────────────────────────────────
+// ─── CSR Card (Full-Width Row Layout) ─────────────────────────────────────────
 function CSRCard({
   initiative,
   onClick,
+  index = 0,
 }: {
   initiative: CSR;
   onClick: () => void;
+  index?: number;
 }) {
   const [imageError, setImageError] = useState(false);
   const IconComponent = getIcon(initiative.icon);
 
+  const isEven = index % 2 === 0;
+
   return (
     <motion.div
-      whileHover={{ y: -8 }}
+      whileHover={{ y: -6 }}
       onClick={onClick}
-      className="group cursor-pointer rounded-3xl overflow-hidden h-full flex flex-col relative"
+      className={`group cursor-pointer rounded-3xl overflow-hidden relative w-full
+                  flex flex-col md:flex-row md:items-stretch
+                  ${isEven ? '' : 'md:flex-row-reverse'}`}
       style={{
         background: COLORS.cardBgMedium,
         border: `1px solid ${initiative.featured ? COLORS.goldBorderStrong : COLORS.dividerGold}`,
@@ -76,8 +82,9 @@ function CSRCard({
       {/* Featured Badge */}
       {initiative.featured && (
         <div
-          className="absolute top-4 left-4 z-20 px-3 py-1.5 rounded-full text-[10px] font-bold
-                     uppercase tracking-wider flex items-center gap-1.5"
+          className={`absolute top-4 z-20 px-3 py-1.5 rounded-full text-[10px] font-bold
+                      uppercase tracking-wider flex items-center gap-1.5
+                      ${isEven ? 'left-4' : 'right-4 md:left-4'}`}
           style={{
             background: COLORS.progressGradient,
             color: COLORS.white,
@@ -89,8 +96,13 @@ function CSRCard({
         </div>
       )}
 
-      {/* Image */}
-      <div className="relative h-48 xl:h-56 overflow-hidden">
+      {/* ── Image Section — full height on desktop ── */}
+      <div
+        className="relative w-full md:w-2/5 lg:w-[38%] xl:w-[36%]
+                   h-56 sm:h-64
+                   md:h-auto md:self-stretch
+                   overflow-hidden flex-shrink-0"
+      >
         {!imageError ? (
           <img
             src={initiative.image}
@@ -101,10 +113,22 @@ function CSRCard({
         ) : (
           <PlaceholderImage title={initiative.title} icon={IconComponent} />
         )}
+
+        {/* Desktop gradient (fade toward content) */}
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 hidden md:block"
           style={{
-            background: `linear-gradient(to top, ${COLORS.primary}, ${COLORS.overlayMid}, transparent)`,
+            background: isEven
+              ? `linear-gradient(to right, transparent 55%, ${COLORS.cardBgMedium} 100%)`
+              : `linear-gradient(to left,  transparent 55%, ${COLORS.cardBgMedium} 100%)`,
+          }}
+        />
+
+        {/* Mobile gradient */}
+        <div
+          className="absolute inset-0 md:hidden"
+          style={{
+            background: `linear-gradient(to top, ${COLORS.primary}, transparent 60%)`,
           }}
         />
 
@@ -127,7 +151,7 @@ function CSRCard({
         </div>
 
         {/* Icon badge */}
-        <div className="absolute top-4 right-4 z-10">
+        <div className={`absolute top-4 z-10 ${isEven ? 'right-4' : 'left-4 md:right-4 md:left-auto'}`}>
           <div
             className="w-10 h-10 rounded-xl flex items-center justify-center"
             style={{
@@ -141,9 +165,11 @@ function CSRCard({
         </div>
       </div>
 
-      {/* Content */}
-      <div className="p-5 xl:p-6 flex-1 flex flex-col">
-        <div className="mb-3">
+      {/* ── Content Section ── */}
+      <div className="flex-1 p-6 sm:p-8 lg:p-10 xl:p-12 flex flex-col justify-center">
+
+        {/* Category + Impact */}
+        <div className="flex flex-wrap items-center gap-2 mb-3">
           <span
             className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
             style={{
@@ -154,73 +180,103 @@ function CSRCard({
           >
             {initiative.category}
           </span>
+          {initiative.impact && (
+            <span
+              className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold"
+              style={{
+                background: COLORS.highlightBg,
+                border: `1px solid ${COLORS.highlightBorder}`,
+                color: COLORS.goldTextSoft,
+              }}
+            >
+              <Icons.Target className="w-3 h-3" />
+              {initiative.impact}
+            </span>
+          )}
         </div>
 
+        {/* Title */}
         <h3
-          className="font-playfair font-bold text-lg xl:text-xl mb-2 transition-colors duration-300"
+          className="font-playfair font-bold
+                     text-2xl sm:text-3xl xl:text-4xl 2xl:text-5xl
+                     mb-4 leading-tight
+                     group-hover:text-yellow-300 transition-colors duration-300"
           style={{ color: COLORS.white }}
         >
           {initiative.title}
         </h3>
 
+        {/* Description — JUSTIFIED */}
         <p
-          className="text-sm xl:text-base leading-relaxed mb-4 flex-1 line-clamp-3"
+          className="text-sm sm:text-base xl:text-lg leading-relaxed mb-5 text-justify"
           style={{ color: COLORS.textHalf }}
         >
           {initiative.description}
         </p>
 
-        <div className="flex flex-wrap gap-3 mb-4">
+        {/* Meta row */}
+        <div className="flex flex-wrap gap-4 mb-5">
           <span
-            className="flex items-center gap-1.5 text-xs"
+            className="flex items-center gap-1.5 text-xs sm:text-sm"
             style={{ color: COLORS.textMuted }}
           >
-            <Icons.MapPin className="w-3.5 h-3.5" style={{ color: COLORS.accent }} />
+            <Icons.MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: COLORS.accent }} />
             {initiative.location}
           </span>
           <span
-            className="flex items-center gap-1.5 text-xs"
+            className="flex items-center gap-1.5 text-xs sm:text-sm"
             style={{ color: COLORS.textMuted }}
           >
-            <Icons.Calendar className="w-3.5 h-3.5" style={{ color: COLORS.accent }} />
+            <Icons.Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4" style={{ color: COLORS.accent }} />
             {initiative.year}
           </span>
         </div>
 
-        <div className="flex flex-wrap gap-1.5 mb-4">
-          {initiative.highlights?.slice(0, 3).map((h, i) => (
-            <span
-              key={i}
-              className="px-2 py-0.5 rounded-full text-[10px] font-medium"
-              style={{
-                background: COLORS.highlightBg,
-                color: COLORS.goldTextSoft,
-                border: `1px solid ${COLORS.highlightBorder}`,
-              }}
-            >
-              {h}
-            </span>
-          ))}
-        </div>
+        {/* Highlights */}
+        {initiative.highlights && initiative.highlights.length > 0 && (
+          <div className="flex flex-wrap gap-1.5 mb-5">
+            {initiative.highlights.slice(0, 6).map((h, i) => (
+              <span
+                key={i}
+                className="px-2.5 py-1 rounded-full text-[11px] font-medium"
+                style={{
+                  background: COLORS.highlightBg,
+                  color: COLORS.goldTextSoft,
+                  border: `1px solid ${COLORS.highlightBorder}`,
+                }}
+              >
+                {h}
+              </span>
+            ))}
+          </div>
+        )}
 
+        {/* Learn More */}
         <div
-          className="mt-auto flex items-center gap-2 text-sm font-semibold"
+          className="flex items-center gap-2 text-sm sm:text-base font-semibold transition-all duration-300 group-hover:gap-3"
           style={{ color: COLORS.accent }}
         >
           <span>Learn More</span>
-          <Icons.ChevronRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
+          <Icons.ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover:translate-x-1" />
         </div>
       </div>
 
+      {/* Bottom accent line */}
       <div
-        className="h-[2px] scale-x-0 group-hover:scale-x-100 transition-transform duration-500 origin-left"
-        style={{ background: COLORS.bottomLineGradient }}
+        className={`absolute bottom-0 left-0 right-0 h-[2px]
+                    scale-x-0 group-hover:scale-x-100 transition-transform duration-500
+                    ${isEven ? 'origin-left' : 'origin-right'}`}
+        style={{
+          background: isEven
+            ? `linear-gradient(90deg,  ${COLORS.accent}, transparent)`
+            : `linear-gradient(270deg, ${COLORS.accent}, transparent)`,
+        }}
       />
     </motion.div>
   );
 }
 
-// ─── CSR Detail Modal ──────────────────────────────────────────────────────────
+// ─── CSR Detail Modal (unchanged) ─────────────────────────────────────────────
 function CSRDetailModal({
   initiative,
   isOpen,
@@ -249,7 +305,6 @@ function CSRDetailModal({
             onClick={onClose}
           />
 
-          {/* Scroll wrapper */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -273,7 +328,6 @@ function CSRDetailModal({
                   boxShadow: COLORS.modalShadow,
                 }}
               >
-                {/* Close Button */}
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10
@@ -288,7 +342,6 @@ function CSRDetailModal({
                   <Icons.X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
 
-                {/* Hero Image */}
                 <div className="relative h-56 sm:h-72 xl:h-80 2xl:h-96">
                   {!imageError ? (
                     <img
@@ -307,7 +360,6 @@ function CSRDetailModal({
                     }}
                   />
 
-                  {/* Category badge */}
                   <div className="absolute top-4 left-4 sm:top-6 sm:left-6">
                     <span
                       className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full text-[10px] sm:text-xs
@@ -319,7 +371,6 @@ function CSRDetailModal({
                     </span>
                   </div>
 
-                  {/* Title area */}
                   <div className="absolute bottom-4 left-4 right-12 sm:bottom-6 sm:left-6 sm:right-16">
                     <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3">
                       <div
@@ -354,21 +405,11 @@ function CSRDetailModal({
                   </div>
                 </div>
 
-                {/* Content */}
                 <div className="p-4 sm:p-6 xl:p-8">
-                  {/* Meta */}
                   <div className="grid grid-cols-2 gap-3 sm:gap-4 mb-6 sm:mb-8">
                     {[
-                      {
-                        icon: Icons.MapPin,
-                        label: 'Location',
-                        value: initiative.location,
-                      },
-                      {
-                        icon: Icons.Calendar,
-                        label: 'Duration',
-                        value: initiative.year,
-                      },
+                      { icon: Icons.MapPin, label: 'Location', value: initiative.location },
+                      { icon: Icons.Calendar, label: 'Duration', value: initiative.year },
                     ].map(({ icon: Icon, label, value }) => (
                       <div
                         key={label}
@@ -382,52 +423,38 @@ function CSRDetailModal({
                           className="w-4 h-4 sm:w-5 sm:h-5 mx-auto mb-1.5 sm:mb-2"
                           style={{ color: COLORS.accent }}
                         />
-                        <div
-                          className="text-[10px] sm:text-xs"
-                          style={{ color: COLORS.textHalf }}
-                        >
+                        <div className="text-[10px] sm:text-xs" style={{ color: COLORS.textHalf }}>
                           {label}
                         </div>
-                        <div
-                          className="text-sm font-semibold truncate"
-                          style={{ color: COLORS.white }}
-                        >
+                        <div className="text-sm font-semibold truncate" style={{ color: COLORS.white }}>
                           {value}
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  {/* Description */}
                   <div className="mb-6 sm:mb-8">
                     <h3
                       className="font-rajdhani font-bold text-base sm:text-lg mb-3 flex items-center gap-2"
                       style={{ color: COLORS.white }}
                     >
-                      <div
-                        className="w-6 h-[2px]"
-                        style={{ background: COLORS.accent }}
-                      />
+                      <div className="w-6 h-[2px]" style={{ background: COLORS.accent }} />
                       About This Initiative
                     </h3>
                     <p
-                      className="text-sm xl:text-base leading-relaxed"
+                      className="text-sm xl:text-base leading-relaxed text-justify"
                       style={{ color: COLORS.textSecondary }}
                     >
                       {initiative.longDescription}
                     </p>
                   </div>
 
-                  {/* Highlights */}
                   <div className="mb-2">
                     <h3
                       className="font-rajdhani font-bold text-base sm:text-lg mb-3 flex items-center gap-2"
                       style={{ color: COLORS.white }}
                     >
-                      <div
-                        className="w-6 h-[2px]"
-                        style={{ background: COLORS.accent }}
-                      />
+                      <div className="w-6 h-[2px]" style={{ background: COLORS.accent }} />
                       Key Achievements
                     </h3>
                     <div className="flex flex-wrap gap-2">
@@ -456,7 +483,7 @@ function CSRDetailModal({
   );
 }
 
-// ─── All Modal Card ────────────────────────────────────────────────────────────
+// ─── All Modal Card (unchanged) ───────────────────────────────────────────────
 function AllModalCard({
   initiative,
   onClick,
@@ -492,7 +519,6 @@ function AllModalCard({
         el.style.boxShadow = 'none';
       }}
     >
-      {/* Image */}
       <div className="relative h-40 xl:h-48 overflow-hidden">
         {!imageError ? (
           <img
@@ -511,7 +537,6 @@ function AllModalCard({
           }}
         />
 
-        {/* Hover overlay */}
         <div
           className="absolute inset-0 flex items-center justify-center opacity-0
                      group-hover:opacity-100 transition-opacity duration-300"
@@ -525,14 +550,10 @@ function AllModalCard({
               border: `2px solid ${COLORS.accent}`,
             }}
           >
-            <Icons.Eye
-              className="w-4 h-4 sm:w-5 sm:h-5"
-              style={{ color: COLORS.accent }}
-            />
+            <Icons.Eye className="w-4 h-4 sm:w-5 sm:h-5" style={{ color: COLORS.accent }} />
           </motion.div>
         </div>
 
-        {/* Category */}
         <div className="absolute top-3 left-3">
           <span
             className="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
@@ -542,7 +563,6 @@ function AllModalCard({
           </span>
         </div>
 
-        {/* Featured */}
         {initiative.featured && (
           <div className="absolute top-3 right-3">
             <span
@@ -560,7 +580,6 @@ function AllModalCard({
         )}
       </div>
 
-      {/* Content */}
       <div className="p-4 xl:p-5 flex-1 flex flex-col">
         <h3
           className="font-playfair font-bold text-base xl:text-lg mb-2 group-hover:text-[#d4a017] transition-colors duration-300"
@@ -569,7 +588,7 @@ function AllModalCard({
           {initiative.title}
         </h3>
         <p
-          className="text-xs xl:text-sm leading-relaxed mb-3 line-clamp-2 flex-1"
+          className="text-xs xl:text-sm leading-relaxed mb-3 line-clamp-2 flex-1 text-justify"
           style={{ color: COLORS.textHalf }}
         >
           {initiative.description}
@@ -582,10 +601,7 @@ function AllModalCard({
           </span>
         </div>
 
-        <div
-          className="flex items-center gap-3 text-xs mb-3"
-          style={{ color: COLORS.textMuted }}
-        >
+        <div className="flex items-center gap-3 text-xs mb-3" style={{ color: COLORS.textMuted }}>
           <span className="flex items-center gap-1">
             <Icons.MapPin className="w-3 h-3" style={{ color: COLORS.accent }} />
             {initiative.location}
@@ -596,10 +612,7 @@ function AllModalCard({
           </span>
         </div>
 
-        <div
-          className="mt-auto flex items-center gap-2 text-xs font-semibold"
-          style={{ color: COLORS.accent }}
-        >
+        <div className="mt-auto flex items-center gap-2 text-xs font-semibold" style={{ color: COLORS.accent }}>
           <span>View Details</span>
           <Icons.ChevronRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
         </div>
@@ -613,19 +626,18 @@ function AllModalCard({
   );
 }
 
-// ─── All CSR Modal ─────────────────────────────────────────────────────────────
+// ─── All CSR Modal (unchanged) ────────────────────────────────────────────────
 function AllCSRModal({
   isOpen,
   onClose,
   onSelectInitiative,
-  initiatives,               // ← receive live data as prop
+  initiatives,
 }: {
   isOpen: boolean;
   onClose: () => void;
   onSelectInitiative: (initiative: CSR) => void;
   initiatives: CSR[];
 }) {
-  // ── image error tracking keyed by _id string ──
   const [imageErrors, setImageErrors] = useState<Record<string, boolean>>({});
 
   const handleImageError = (id: string) => {
@@ -645,7 +657,6 @@ function AllCSRModal({
             onClick={onClose}
           />
 
-          {/* Scroll wrapper */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -669,7 +680,6 @@ function AllCSRModal({
                   boxShadow: COLORS.modalShadow,
                 }}
               >
-                {/* Close Button */}
                 <button
                   onClick={onClose}
                   className="absolute top-4 right-4 sm:top-6 sm:right-6 z-10
@@ -684,7 +694,6 @@ function AllCSRModal({
                   <Icons.X className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
 
-                {/* Modal Header */}
                 <div
                   className="sticky top-0 z-[5] p-4 sm:p-6 xl:p-8 pb-4"
                   style={{ background: COLORS.modalBgStart }}
@@ -707,26 +716,16 @@ function AllCSRModal({
                         className="font-playfair text-xl sm:text-2xl xl:text-3xl font-bold"
                         style={{ color: COLORS.white }}
                       >
-                        All{' '}
-                        <span style={{ color: COLORS.accent }}>
-                          CSR Initiatives
-                        </span>
+                        All <span style={{ color: COLORS.accent }}>CSR Initiatives</span>
                       </h2>
-                      <p
-                        className="text-xs sm:text-sm"
-                        style={{ color: COLORS.textHalf }}
-                      >
+                      <p className="text-xs sm:text-sm" style={{ color: COLORS.textHalf }}>
                         {initiatives.length} initiatives transforming communities · Click to view details
                       </p>
                     </div>
                   </div>
-                  <div
-                    className="h-[1px] mt-3 sm:mt-4"
-                    style={{ background: COLORS.goldDividerGradient }}
-                  />
+                  <div className="h-[1px] mt-3 sm:mt-4" style={{ background: COLORS.goldDividerGradient }} />
                 </div>
 
-                {/* Grid */}
                 <div className="p-4 sm:p-6 xl:p-8 pt-2">
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 xl:gap-5">
                     {initiatives.map((initiative) => (
@@ -751,21 +750,17 @@ function AllCSRModal({
 
 // ─── Main CSR Section ──────────────────────────────────────────────────────────
 export function CSRSection() {
-  // ── API state ──
   const [initiatives, setInitiatives] = useState<CSR[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // ── Modal state ──
   const [selectedInitiative, setSelectedInitiative] = useState<CSR | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [isAllModalOpen, setIsAllModalOpen] = useState(false);
 
-  // ── Fetch on mount ──
   useEffect(() => {
     const fetchCSR = async () => {
       try {
         const res = await dataService.getCSR();
-
         if (res.success && res.data) {
           const sorted = res.data.sort(
             (a, b) =>
@@ -780,11 +775,9 @@ export function CSRSection() {
         setLoading(false);
       }
     };
-
     fetchCSR();
   }, []);
 
-  // ── Prevent render until loaded or empty ──
   if (loading || initiatives.length === 0) return null;
 
   const openDetailModal = (initiative: CSR) => {
@@ -815,7 +808,7 @@ export function CSRSection() {
         isOpen={isAllModalOpen}
         onClose={() => setIsAllModalOpen(false)}
         onSelectInitiative={handleSelectFromAllModal}
-        initiatives={initiatives}        // ← pass live data
+        initiatives={initiatives}
       />
 
       <section
@@ -823,7 +816,6 @@ export function CSRSection() {
         className="py-20 lg:py-28 relative overflow-hidden"
         style={{ background: COLORS.darkAlt }}
       >
-        {/* Background elements */}
         <div
           className="absolute inset-0 opacity-[0.02] pointer-events-none"
           style={{
@@ -859,8 +851,7 @@ export function CSRSection() {
                 className="font-playfair text-3xl sm:text-4xl xl:text-5xl 2xl:text-6xl font-bold mb-4"
                 style={{ color: COLORS.white }}
               >
-                Corporate Social{' '}
-                <span className="grad-gold">Responsibility</span>
+                Corporate Social <span className="grad-gold">Responsibility</span>
               </h2>
               <div className="divider-gold w-24 mx-auto mb-6" />
               <p
@@ -874,13 +865,14 @@ export function CSRSection() {
             </div>
           </AnimatedSection>
 
-          {/* Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 xl:gap-6 mb-10 lg:mb-12">
+          {/* ── Vertical Stack — one full-width card per row ── */}
+          <div className="flex flex-col gap-6 xl:gap-8 mb-10 lg:mb-12 max-w-6xl mx-auto">
             {displayedInitiatives.map((initiative, idx) => (
               <AnimatedSection key={initiative._id} delay={idx * 0.1}>
                 <CSRCard
                   initiative={initiative}
                   onClick={() => openDetailModal(initiative)}
+                  index={idx}
                 />
               </AnimatedSection>
             ))}

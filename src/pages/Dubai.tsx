@@ -4,21 +4,27 @@ import {
   MapPin,
   Building2,
   Droplets,
-  Wrench,
-  ShieldCheck,
+  Fuel,
+  FlaskConical,
+  Ship,
   Globe,
   Phone,
   Mail,
   ArrowRight,
   CheckCircle2,
   Award,
+  Package,
+  Layers,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AnimatedSection from '../components/AnimatedSection';
 import { WhatsAppButton } from '@/components/ui';
 import SEOMeta from '../components/SEOMeta';
 import dataService from '../services/dataService';
-
+import petcokeImg from '../images/petcoke.jpg';
+import sulphurImg from '../images/sulphur.png';
+import baseoilImg from '../images/baseoil.jpg';
+import petrolImg from '../images/petrol.jpg';
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface Branch {
   id?: string;
@@ -35,12 +41,28 @@ interface Branch {
   color?: string;
 }
 
-// ─── Static Data (unchanged) ─────────────────────────────────────────────────
+// ─── Static Data (updated) ───────────────────────────────────────────────────
 const capabilities = [
-  { icon: Droplets, title: 'Water Treatment', desc: 'Advanced effluent treatment and desalination systems serving UAE industrial sector.' },
-  { icon: Wrench, title: 'Maintenance Services', desc: 'Comprehensive mechanical and electrical maintenance for oil & gas facilities.' },
-  { icon: ShieldCheck, title: 'HSE Compliance', desc: 'Strict adherence to Dubai Municipality and ADNOC HSE standards.' },
-  { icon: Building2, title: 'Facility Management', desc: 'End-to-end industrial facility operations and infrastructure management.' },
+  {
+    icon: FlaskConical,
+    title: 'Basic Industrial Chemicals Trading',
+    desc: 'Global trading of basic industrial chemicals, delivering reliable supply solutions to international markets.',
+  },
+  {
+    icon: Ship,
+    title: 'Offshore Refined Oil Product Trading',
+    desc: 'Comprehensive offshore refined oil product trading abroad, connecting suppliers with global energy demand.',
+  },
+  {
+    icon: Fuel,
+    title: 'Fuel Supply Services',
+    desc: 'End-to-end fuel supply services ensuring seamless logistics and dependable delivery worldwide.',
+  },
+  {
+    icon: Package,
+    title: 'Petroleum Products Portfolio',
+    desc: 'Trading in pet coke, sulphur, base oil, and petroleum products for diversified industrial applications.',
+  },
 ];
 
 const certifications = [
@@ -57,22 +79,47 @@ const stats = [
   { value: '100%', label: 'Safety Record' },
 ];
 
+// ─── Product Portfolio Cards (with images) ───────────────────────────────────
+const productPortfolio = [
+  {
+    title: 'Pet Coke',
+    desc: 'High-quality petroleum coke supplied globally for industrial and energy applications.',
+    image: petcokeImg,
+    icon: Layers,
+  },
+  {
+    title: 'Sulphur',
+    desc: 'Premium-grade sulphur trading serving chemical, fertilizer, and industrial sectors.',
+    image: sulphurImg,
+    icon: FlaskConical,
+  },
+  {
+    title: 'Base Oil',
+    desc: 'High-performance base oils for lubricant manufacturing and industrial use.',
+    image: baseoilImg,
+    icon: Droplets,
+  },
+  {
+    title: 'Petroleum Products',
+    desc: 'Comprehensive range of refined petroleum products for global energy markets.',
+    image: petrolImg,
+    icon: Fuel,
+  },
+];
+
 // ─── Component ───────────────────────────────────────────────────────────────
 export default function Dubai() {
   const [, setScrolled] = useState(false);
 
-  // ── Dubai branch from API ──
   const [dubaiBranch, setDubaiBranch] = useState<Branch | null>(null);
   const [loadingBranch, setLoadingBranch] = useState(true);
 
-  // ── Scroll listener ──
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 100);
     window.addEventListener('scroll', onScroll);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // ── Fetch Dubai branch from contact API ──
   useEffect(() => {
     const fetchDubaiBranch = async () => {
       try {
@@ -82,7 +129,6 @@ export default function Dubai() {
           const firstEntry = res.data[0] as any;
 
           if (firstEntry?.branches && Array.isArray(firstEntry.branches)) {
-            // Find specifically the Dubai branch by id
             const dubai = firstEntry.branches.find(
               (b: Branch) => b.id === 'dubai'
             );
@@ -101,7 +147,6 @@ export default function Dubai() {
     fetchDubaiBranch();
   }, []);
 
-  // ── Build contactItems from dubaiBranch (or fallback to null) ──
   const contactItems = dubaiBranch
     ? [
       {
@@ -124,15 +169,13 @@ export default function Dubai() {
 
   const origin = typeof window !== 'undefined' ? window.location.origin : 'https://cvsmultiservices.com';
 
-
-
   const dubaiSchema = {
     "@context": "https://schema.org",
     "@type": "ContactPage",
     "@id": `${origin}/dubai#webpage`,
     "url": `${origin}/dubai`,
     "name": "CVS Multi Services Dubai Office",
-    "description": "CVS Multi Services Middle East Operations. Specialized industrial, oilfield, water treatment, and facility management services in UAE.",
+    "description": "CVS Multi Services Middle East Operations. Specialized in basic industrial chemicals trading, offshore refined oil product trading, and fuel supply services.",
     "contactPoint": {
       "@type": "ContactPoint",
       "telephone": dubaiBranch?.phone || "",
@@ -146,16 +189,14 @@ export default function Dubai() {
     <div className="section-navy min-h-screen">
       <SEOMeta
         title="Dubai Office & Middle East Operations | CVS Multi Services"
-        description="CVS Multi Services is expanding in the Middle East. Contact our Abu Dhabi/Dubai representatives for specialized oilfield, ETP, and seismic services in the UAE."
-        keywords="CVS Dubai, UAE office, Abu Dhabi operations, Middle East oilfield services, ADNOC partners"
+        description="CVS Multi Services Dubai — specialized in basic industrial chemicals trading, offshore refined oil product trading abroad, and fuel supply services."
+        keywords="CVS Dubai, UAE office, industrial chemicals trading, offshore refined oil, fuel supply services, pet coke, sulphur, base oil, petroleum products"
         schema={dubaiSchema}
       />
       <WhatsAppButton />
 
       {/* ── Hero ── */}
       <section className="relative min-h-[75vh] xl:min-h-[80vh] flex items-center justify-center overflow-hidden pt-20">
-
-        {/* Background image */}
         <div className="absolute inset-0" style={{ zIndex: 0 }}>
           <img
             src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1920&h=1080&fit=crop"
@@ -164,7 +205,6 @@ export default function Dubai() {
           />
         </div>
 
-        {/* Gradient overlay */}
         <div
           className="absolute inset-0"
           style={{
@@ -174,7 +214,6 @@ export default function Dubai() {
           }}
         />
 
-        {/* Gold top line */}
         <div
           className="absolute top-0 left-0 w-full h-1"
           style={{
@@ -183,7 +222,6 @@ export default function Dubai() {
           }}
         />
 
-        {/* Main content */}
         <div
           className="relative w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 text-center"
           style={{ zIndex: 10 }}
@@ -201,7 +239,6 @@ export default function Dubai() {
             >
               <MapPin className="w-4 h-4" style={{ color: '#d4a017' }} />
               <span className="text-sm font-medium" style={{ color: '#d4a017' }}>
-                {/* ── FROM API: country or fallback ── */}
                 {dubaiBranch?.country ?? 'United Arab Emirates'}
               </span>
             </motion.div>
@@ -212,7 +249,6 @@ export default function Dubai() {
               className="font-playfair text-4xl sm:text-5xl lg:text-6xl xl:text-7xl 2xl:text-8xl
                          font-bold text-white mb-6 leading-tight"
             >
-              {/* ── FROM API: city or fallback ── */}
               CVS {dubaiBranch?.city ?? 'Dubai'}{' '}
               <span style={{ color: '#d4a017' }}>Office</span>
             </h1>
@@ -224,12 +260,12 @@ export default function Dubai() {
                          max-w-3xl xl:max-w-4xl mx-auto mb-8"
               style={{ color: 'rgba(255,255,255,0.7)' }}
             >
-              Expanding our legacy of excellence to the Middle East. State-of-the-art industrial
-              services facility serving the UAE's oil, gas, and infrastructure sectors.
+              A strategic hub for global energy and chemical solutions — driving international
+              commercial operations across industrial chemicals, refined oil products, and fuel
+              supply services.
             </p>
           </AnimatedSection>
 
-          {/* Buttons */}
           <div
             className="flex flex-wrap gap-4 justify-center"
             style={{ position: 'relative', zIndex: 50 }}
@@ -278,7 +314,6 @@ export default function Dubai() {
           </div>
         </div>
 
-        {/* Floating globe */}
         <motion.div
           className="absolute bottom-8 right-8 xl:bottom-10 xl:right-10 hidden lg:block"
           style={{ zIndex: 10 }}
@@ -297,7 +332,7 @@ export default function Dubai() {
         </motion.div>
       </section>
 
-      {/* ── About Facility (static) ── */}
+      {/* ── About Facility (UPDATED DESCRIPTION WITH JUSTIFY) ── */}
       <section
         className="py-20 lg:py-28 relative overflow-hidden"
         style={{ background: '#080f1e' }}
@@ -314,36 +349,44 @@ export default function Dubai() {
                 <span style={{ color: '#d4a017' }}>Middle East Operations</span>
               </h2>
               <div className="w-24 h-0.5 mb-6 xl:mb-8" style={{ background: '#d4a017' }} />
+
+              {/* ── UPDATED DESCRIPTION WITH JUSTIFY TEXT ── */}
               <p
                 className="text-sm sm:text-base xl:text-lg leading-relaxed mb-5"
-                style={{ color: 'rgba(255,255,255,0.6)' }}
+                style={{
+                  color: 'rgba(255,255,255,0.7)',
+                  textAlign: 'justify',
+                  textJustify: 'inter-word',
+                }}
               >
-                Our Dubai office represents CVS Multi Services for commitment to global expansion and
-                delivering Indian engineering excellence to international markets.
+                Our Dubai office represents CVS Multi Services, reflecting our steadfast
+                commitment to global expansion and the delivery of premier energy and chemical
+                solutions. As a key strategic hub, this office oversees diverse international
+                commercial operations, specializing in{' '}
+                <span style={{ color: '#d4a017' }} className="font-semibold">
+                  basic industrial chemicals trading
+                </span>{' '}
+                alongside{' '}
+                <span style={{ color: '#d4a017' }} className="font-semibold">
+                  offshore refined oil product trading
+                </span>
+                .
               </p>
               <p
-                className="text-sm sm:text-base xl:text-lg leading-relaxed mb-7 xl:mb-8"
-                style={{ color: 'rgba(255,255,255,0.5)' }}
+                className="text-sm sm:text-base xl:text-lg leading-relaxed"
+                style={{
+                  color: 'rgba(255,255,255,0.6)',
+                  textAlign: 'justify',
+                  textJustify: 'inter-word',
+                }}
               >
-                The facility houses advanced equipment for industrial cleaning, waste management,
-                and specialized oilfield services.
+                Through these integrated capabilities and our comprehensive{' '}
+                <span style={{ color: '#d4a017' }} className="font-semibold">
+                  fuel supply services
+                </span>
+                , we ensure seamless logistics and reliable product delivery to our global
+                partners.
               </p>
-              {/* <div className="space-y-3 xl:space-y-4">
-                {certifications.map((cert, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <Award
-                      className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
-                      style={{ color: '#d4a017' }}
-                    />
-                    <span
-                      className="text-xs sm:text-sm xl:text-base"
-                      style={{ color: 'rgba(255,255,255,0.7)' }}
-                    >
-                      {cert}
-                    </span>
-                  </div>
-                ))}
-              </div> */}
             </AnimatedSection>
 
             <AnimatedSection direction="right">
@@ -373,7 +416,6 @@ export default function Dubai() {
                   </motion.div>
                 </div>
 
-                {/* Floating card — FROM API */}
                 <motion.div
                   className="absolute -bottom-5 -left-4 sm:-bottom-6 sm:-left-6
                              p-4 sm:p-5 xl:p-6 rounded-2xl"
@@ -390,17 +432,14 @@ export default function Dubai() {
                       className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center flex-shrink-0"
                       style={{ background: 'rgba(212,160,23,0.15)' }}
                     >
-                      {/* ── FROM API: flag emoji ── */}
                       <span className="text-lg">
                         {dubaiBranch?.flag ?? '🇦🇪'}
                       </span>
                     </div>
                     <div>
-                      {/* ── FROM API: city ── */}
                       <div className="text-white font-bold text-sm sm:text-base">
                         {dubaiBranch?.city ?? 'Dubai'}
                       </div>
-                      {/* ── FROM API: label ── */}
                       <div
                         className="text-[10px] sm:text-xs"
                         style={{ color: 'rgba(255,255,255,0.5)' }}
@@ -416,7 +455,113 @@ export default function Dubai() {
         </div>
       </section>
 
-      {/* ── Capabilities (static) ── */}
+      {/* ── Product Portfolio (NEW - 4 Cards with Images) ── */}
+      <section
+        className="py-20 lg:py-28 relative"
+        style={{ background: '#080f1e' }}
+      >
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
+          <div className="text-center mb-12 lg:mb-16">
+            <AnimatedSection>
+              <div className="section-label mx-auto w-fit mb-4">Product Portfolio</div>
+              <h2
+                className="font-playfair text-3xl sm:text-4xl xl:text-5xl 2xl:text-6xl
+                           font-bold text-white mb-4"
+              >
+                Key <span style={{ color: '#d4a017' }}>Products</span>
+              </h2>
+              <div className="w-24 h-0.5 mx-auto mb-6" style={{ background: '#d4a017' }} />
+              <p
+                className="text-sm sm:text-base xl:text-lg max-w-2xl xl:max-w-3xl mx-auto"
+                style={{ color: 'rgba(255,255,255,0.5)' }}
+              >
+                Our diversified product portfolio serves global industrial and energy markets
+                with premium-grade materials.
+              </p>
+            </AnimatedSection>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 xl:gap-6 2xl:gap-8">
+            {productPortfolio.map((product, i) => (
+              <AnimatedSection key={i} delay={i * 0.1}>
+                <motion.div
+                  whileHover={{ y: -10 }}
+                  className="h-full rounded-2xl xl:rounded-3xl overflow-hidden
+                             transition-all duration-300 group flex flex-col"
+                  style={{
+                    background: 'rgba(10,36,71,0.4)',
+                    border: '1px solid rgba(212,160,23,0.1)',
+                    boxShadow: '0 8px 32px rgba(0,0,0,0.3)',
+                  }}
+                  onMouseEnter={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.borderColor = 'rgba(212,160,23,0.3)';
+                    el.style.boxShadow = '0 20px 60px rgba(0,0,0,0.5)';
+                  }}
+                  onMouseLeave={(e) => {
+                    const el = e.currentTarget as HTMLElement;
+                    el.style.borderColor = 'rgba(212,160,23,0.1)';
+                    el.style.boxShadow = '0 8px 32px rgba(0,0,0,0.3)';
+                  }}
+                >
+                  {/* Image */}
+                  <div className="relative h-40 sm:h-48 xl:h-56 overflow-hidden">
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                    />
+                    {/* Gradient overlay */}
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        background:
+                          'linear-gradient(to top, rgba(10,36,71,0.95) 0%, rgba(10,36,71,0.3) 60%, transparent 100%)',
+                      }}
+                    />
+                    {/* Icon badge */}
+                    <div
+                      className="absolute top-4 right-4 w-10 h-10 sm:w-12 sm:h-12 rounded-xl
+                                 flex items-center justify-center backdrop-blur-md"
+                      style={{
+                        background: 'rgba(212,160,23,0.2)',
+                        border: '1px solid rgba(212,160,23,0.4)',
+                      }}
+                    >
+                      <product.icon
+                        className="w-5 h-5 sm:w-6 sm:h-6"
+                        style={{ color: '#d4a017' }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-5 xl:p-6 flex-1 flex flex-col">
+                    <h3
+                      className="font-rajdhani font-bold text-lg xl:text-xl 2xl:text-2xl
+                                 text-white mb-2 xl:mb-3 group-hover:text-yellow-300 transition-colors"
+                    >
+                      {product.title}
+                    </h3>
+                    <p
+                      className="text-xs sm:text-sm xl:text-base leading-relaxed flex-1"
+                      style={{ color: 'rgba(255,255,255,0.5)' }}
+                    >
+                      {product.desc}
+                    </p>
+                    <div
+                      className="mt-4 xl:mt-5 h-0.5 w-12 transition-all duration-300 group-hover:w-full"
+                      style={{ background: 'linear-gradient(90deg, #d4a017, transparent)' }}
+                    />
+                  </div>
+                </motion.div>
+              </AnimatedSection>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Capabilities (UPDATED - Removed "Outside UAE") ── */}
       <section className="py-20 lg:py-28 relative" style={{ background: '#050d1a' }}>
         <div
           className="absolute inset-0 opacity-5 pointer-events-none"
@@ -441,7 +586,8 @@ export default function Dubai() {
                 className="text-sm sm:text-base xl:text-lg max-w-2xl xl:max-w-3xl mx-auto"
                 style={{ color: 'rgba(255,255,255,0.5)' }}
               >
-                Comprehensive industrial solutions tailored for UAE regulations and standards.
+                Specialized global trading and supply services covering industrial chemicals,
+                refined oil products, and fuel logistics.
               </p>
             </AnimatedSection>
           </div>
@@ -491,7 +637,7 @@ export default function Dubai() {
                   </h3>
                   <p
                     className="text-xs sm:text-sm xl:text-base leading-relaxed flex-1"
-                    style={{ color: 'rgba(255,255,255,0.5)' }}
+                    style={{ color: 'rgba(255,255,255,0.5)'}}
                   >
                     {cap.desc}
                   </p>
@@ -506,7 +652,7 @@ export default function Dubai() {
         </div>
       </section>
 
-      {/* ── Location & Contact ── FROM API ── */}
+      {/* ── Location & Contact ── */}
       <section
         id="location"
         className="py-20 lg:py-28 relative overflow-hidden"
@@ -514,8 +660,6 @@ export default function Dubai() {
       >
         <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24">
           <div className="grid lg:grid-cols-2 gap-10 xl:gap-14 2xl:gap-20">
-
-            {/* Map — FROM API mapSrc */}
             <AnimatedSection direction="left">
               <div
                 className="relative h-[320px] sm:h-[380px] xl:h-[460px] 2xl:h-[520px]
@@ -523,7 +667,6 @@ export default function Dubai() {
                 style={{ border: '1px solid rgba(212,160,23,0.2)' }}
               >
                 {!loadingBranch && dubaiBranch?.mapSrc ? (
-                  // ── REAL MAP from API ──
                   <iframe
                     src={dubaiBranch.mapSrc}
                     width="100%"
@@ -539,7 +682,6 @@ export default function Dubai() {
                     title={`${dubaiBranch.city ?? 'Dubai'} Office`}
                   />
                 ) : (
-                  // ── Placeholder while loading or no mapSrc ──
                   <div
                     className="absolute inset-0 flex items-center justify-center"
                     style={{ background: 'rgba(10,36,71,0.6)' }}
@@ -562,7 +704,6 @@ export default function Dubai() {
                   </div>
                 )}
 
-                {/* Grid overlay */}
                 <div
                   className="absolute inset-0 opacity-10 pointer-events-none"
                   style={{
@@ -574,7 +715,6 @@ export default function Dubai() {
               </div>
             </AnimatedSection>
 
-            {/* Contact Info — FROM API */}
             <AnimatedSection direction="right">
               <div className="section-label mb-4">Contact Dubai</div>
               <h2
@@ -618,7 +758,6 @@ export default function Dubai() {
                 ))}
               </div>
 
-              {/* Get Directions — FROM API mapUrl */}
               {dubaiBranch?.mapUrl && (
                 <a
                   href={dubaiBranch.mapUrl}
@@ -638,7 +777,6 @@ export default function Dubai() {
                 </a>
               )}
 
-              {/* Business hours — FROM API */}
               {dubaiBranch?.hours && (
                 <div
                   className="mt-4 p-4 sm:p-5 rounded-2xl flex items-center gap-3"
@@ -655,14 +793,12 @@ export default function Dubai() {
                     className="text-xs sm:text-sm"
                     style={{ color: 'rgba(255,255,255,0.7)' }}
                   >
-                    {/* ── FROM API: hours ── */}
                     <span className="font-semibold text-white">Office Hours: </span>
                     {dubaiBranch.hours}
                   </p>
                 </div>
               )}
 
-              {/* Compliance note (static) */}
               <div
                 className="mt-4 p-4 sm:p-5 xl:p-6 rounded-2xl"
                 style={{
@@ -680,9 +816,9 @@ export default function Dubai() {
                     className="text-xs sm:text-sm xl:text-base"
                     style={{ color: 'rgba(255,255,255,0.7)' }}
                   >
-                    Our Dubai facility operates under full compliance with UAE federal regulations
-                    and maintains strategic partnerships with local authorities for rapid project
-                    deployment.
+                    Our Dubai office serves as a strategic international trading hub, operating
+                    across global markets in industrial chemicals, refined oil products, and fuel
+                    supply services.
                   </p>
                 </div>
               </div>
@@ -691,7 +827,7 @@ export default function Dubai() {
         </div>
       </section>
 
-      {/* ── CTA (static) ── */}
+      {/* ── CTA ── */}
       <section
         className="py-20 lg:py-28 relative"
         style={{
@@ -721,8 +857,8 @@ export default function Dubai() {
                            max-w-2xl xl:max-w-3xl mx-auto"
                 style={{ color: 'rgba(255,255,255,0.6)' }}
               >
-                Ready to bring Indian engineering excellence to your UAE operations? Contact our
-                Dubai team today.
+                Ready to connect with a trusted global partner in energy trading and chemical
+                supply? Reach out to our Dubai team today.
               </p>
               <Link
                 to="/contact"

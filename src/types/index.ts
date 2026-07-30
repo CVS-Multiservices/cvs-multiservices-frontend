@@ -125,6 +125,7 @@ export interface OngoingProject {
   teamSize?: number;
   createdAt: string;    // used for sorting
   updatedAt: string;
+  status: string;
 }
 
 // ==================== UPCOMING PROJECT ====================

@@ -12,6 +12,10 @@ const getIcon = (name: string | undefined): LucideIcon =>
   ((Icons as Record<string, unknown>)[name ?? ''] as LucideIcon) ??
   Icons.Settings;
 
+// ─── Status helper ────────────────────────────────────────────────────────────
+const isCompleted = (project: OngoingProject): boolean =>
+  ((project as any).status ?? '').toString().toLowerCase() === 'completed';
+
 // ─── Props ────────────────────────────────────────────────────────────────────
 interface ProjectDetailModalProps {
   project: OngoingProject | null;
@@ -45,6 +49,28 @@ export function ProjectDetailModal({
 
   const IconComponent = getIcon(project.icon);
   const color = serviceColor;
+
+  // ── Dynamic status theming ──
+  const completed = isCompleted(project);
+  const statusTheme = completed
+    ? {
+        bg: 'rgba(16, 185, 129, 0.15)',
+        border: 'rgba(16, 185, 129, 0.4)',
+        color: '#34d399',
+        label: 'Delivered',
+        icon: Icons.CheckCircle2,
+        pulse: false,
+      }
+    : {
+        bg: 'rgba(251, 191, 36, 0.15)',
+        border: 'rgba(251, 191, 36, 0.4)',
+        color: '#fbbf24',
+        label: 'In Progress',
+        icon: Icons.Loader,
+        pulse: true,
+      };
+
+  const StatusIcon = statusTheme.icon;
 
   return (
     <AnimatePresence>
@@ -122,7 +148,7 @@ export function ProjectDetailModal({
                       }}
                     />
 
-                    {/* Service badge */}
+                    {/* Service badge (top-left) */}
                     <div className="absolute top-4 left-4 sm:top-6 sm:left-6 z-10">
                       <span
                         className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full
@@ -132,6 +158,7 @@ export function ProjectDetailModal({
                           background: `${color}20`,
                           border: `1px solid ${color}50`,
                           color,
+                          backdropFilter: 'blur(6px)',
                         }}
                       >
                         <span
@@ -142,20 +169,23 @@ export function ProjectDetailModal({
                       </span>
                     </div>
 
-                    {/* Status badge */}
+                    {/* ── Dynamic Status badge (top-right, before close btn) ── */}
                     <div className="absolute top-4 right-14 sm:top-6 sm:right-20 z-10">
                       <span
                         className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full
                                    text-[9px] sm:text-xs font-bold uppercase tracking-wider
                                    flex items-center gap-1.5"
                         style={{
-                          background: 'rgba(34,197,94,0.15)',
-                          border: '1px solid rgba(34,197,94,0.4)',
-                          color: '#22c55e',
+                          background: statusTheme.bg,
+                          border: `1px solid ${statusTheme.border}`,
+                          color: statusTheme.color,
+                          backdropFilter: 'blur(6px)',
                         }}
                       >
-                        <span className="w-1.5 h-1.5 rounded-full animate-pulse bg-green-400" />
-                        On Track
+                        <StatusIcon
+                          className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${statusTheme.pulse ? 'animate-spin' : ''}`}
+                        />
+                        {statusTheme.label}
                       </span>
                     </div>
 
@@ -201,7 +231,7 @@ export function ProjectDetailModal({
                 ) : (
                   /* No image fallback */
                   <div className="px-4 sm:px-8 pt-8 pb-4">
-                    <div className="flex items-center gap-3 mb-3">
+                    <div className="flex items-center gap-3 mb-3 flex-wrap">
                       <div
                         className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center
                                    justify-center flex-shrink-0"
@@ -226,6 +256,22 @@ export function ProjectDetailModal({
                       >
                         {serviceTitle}
                       </span>
+
+                      {/* Status badge inline (no-image fallback) */}
+                      <span
+                        className="px-3 py-1 rounded-full text-[10px] font-bold
+                                   uppercase tracking-wider flex items-center gap-1.5"
+                        style={{
+                          background: statusTheme.bg,
+                          border: `1px solid ${statusTheme.border}`,
+                          color: statusTheme.color,
+                        }}
+                      >
+                        <StatusIcon
+                          className={`w-3 h-3 ${statusTheme.pulse ? 'animate-spin' : ''}`}
+                        />
+                        {statusTheme.label}
+                      </span>
                     </div>
                     <h2
                       className="font-playfair text-xl sm:text-2xl xl:text-3xl font-bold"
@@ -238,6 +284,45 @@ export function ProjectDetailModal({
 
                 {/* Body */}
                 <div className="px-4 sm:px-8 py-5 sm:py-8">
+
+                  {/* ── Status highlight banner (subtle, full-width) ── */}
+                  <div
+                    className="mb-5 sm:mb-6 p-3 sm:p-4 rounded-xl flex items-center gap-3"
+                    style={{
+                      background: `linear-gradient(135deg, ${statusTheme.bg}, ${statusTheme.bg.replace('0.15', '0.05')})`,
+                      border: `1px solid ${statusTheme.border}`,
+                    }}
+                  >
+                    <div
+                      className="w-9 h-9 sm:w-10 sm:h-10 rounded-lg flex items-center
+                                 justify-center flex-shrink-0"
+                      style={{
+                        background: statusTheme.bg,
+                        border: `1px solid ${statusTheme.border}`,
+                      }}
+                    >
+                      <StatusIcon
+                        className={`w-4 h-4 sm:w-5 sm:h-5 ${statusTheme.pulse ? 'animate-spin' : ''}`}
+                        style={{ color: statusTheme.color }}
+                      />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div
+                        className="text-[9px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5"
+                        style={{ color: 'rgba(255,255,255,0.4)' }}
+                      >
+                        Project Status
+                      </div>
+                      <div
+                        className="text-sm sm:text-base font-bold"
+                        style={{ color: statusTheme.color }}
+                      >
+                        {completed
+                          ? 'Successfully Delivered'
+                          : 'Currently In Progress'}
+                      </div>
+                    </div>
+                  </div>
 
                   {/* Meta cards */}
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-4 mb-6 sm:mb-8">
@@ -310,7 +395,7 @@ export function ProjectDetailModal({
                         Project Overview
                       </h3>
                       <p
-                        className="text-xs sm:text-sm xl:text-base leading-relaxed"
+                        className="text-xs sm:text-sm xl:text-base leading-relaxed text-justify"
                         style={{ color: 'rgba(255,255,255,0.6)' }}
                       >
                         {project.description}
@@ -431,7 +516,11 @@ export function ProjectDetailModal({
                       e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
-                    <span>Discuss Similar Project</span>
+                    <span>
+                      {completed
+                        ? 'Discuss Similar Project'
+                        : 'Discuss Similar Project'}
+                    </span>
                     <Icons.ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </Link>
                 </div>

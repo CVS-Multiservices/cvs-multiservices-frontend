@@ -225,7 +225,10 @@ export function SubserviceDetailModal({
                       </h3>
                       <p
                         className="text-sm sm:text-base xl:text-lg leading-relaxed"
-                        style={{ color: COLORS.textLight62 }}
+                        style={{
+                          color: COLORS.textLight62,
+                          textAlign: 'justify',
+                        }}
                       >
                         {subservice.fullDesc}
                       </p>
