@@ -23,6 +23,9 @@ type ProjectStatus = 'ongoing' | 'completed';
 const isCompleted = (p: OngoingProject) =>
   (p as any).status?.toLowerCase() === 'completed';
 
+// ─── Featured helper ─────────────────────────────────────────────────────────
+const isFeatured = (p: OngoingProject) => Boolean((p as any).featured);
+
 // ─── Project Detail Modal ────────────────────────────────────────────────────
 function ProjectDetailModal({
   project,
@@ -277,7 +280,6 @@ function CategoryFilterDropdown({
   const [coords, setCoords] = useState<{ top: number; right: number } | null>(null);
   const btnRef = useRef<HTMLButtonElement>(null);
 
-  // Calculate position when opening
   const toggleOpen = () => {
     if (!open && btnRef.current) {
       const rect = btnRef.current.getBoundingClientRect();
@@ -289,7 +291,6 @@ function CategoryFilterDropdown({
     setOpen((v) => !v);
   };
 
-  // Close on outside click
   useEffect(() => {
     if (!open) return;
     const handler = (e: MouseEvent) => {
@@ -298,7 +299,6 @@ function CategoryFilterDropdown({
         setOpen(false);
       }
     };
-    // Close on scroll or resize
     const closeOnScroll = () => setOpen(false);
 
     window.addEventListener('click', handler);
@@ -313,7 +313,6 @@ function CategoryFilterDropdown({
 
   return (
     <>
-      {/* Icon Trigger */}
       <button
         ref={btnRef}
         data-filter-trigger
@@ -335,7 +334,6 @@ function CategoryFilterDropdown({
         )}
       </button>
 
-      {/* Portal Dropdown — renders at <body> level to escape overflow-hidden */}
       {open && coords && createPortal(
         <AnimatePresence>
           <motion.div
@@ -398,7 +396,8 @@ function CategoryFilterDropdown({
     </>
   );
 }
-// ─── All Projects Modal (with Search + Icon Filter) ───────────────────────────
+
+// ─── All Projects Modal ──────────────────────────────────────────────────────
 function AllProjectsModal({
   isOpen,
   onClose,
@@ -510,7 +509,6 @@ function AllProjectsModal({
                 </button>
               </div>
 
-              {/* Search + Filter icon */}
               <div className="flex items-center gap-2">
                 <div className="relative flex-1">
                   <Icons.Search
@@ -550,7 +548,6 @@ function AllProjectsModal({
                   )}
                 </div>
 
-                {/* Icon-Based Category Filter */}
                 {categories.length > 1 && (
                   <CategoryFilterDropdown
                     categories={categories}
@@ -560,7 +557,6 @@ function AllProjectsModal({
                 )}
               </div>
 
-              {/* Active filter chip */}
               {activeCategory !== 'All' && (
                 <div className="mt-3 flex items-center gap-2 flex-wrap">
                   <span className="text-[11px] uppercase tracking-wider" style={{ color: COLORS.textHalf }}>
@@ -668,7 +664,6 @@ function AllProjectsModal({
                               }}
                             />
 
-                            {/* Status pill */}
                             <div className="absolute top-2 left-2">
                               <span
                                 className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[9px] font-semibold uppercase tracking-wider"
@@ -816,7 +811,6 @@ function ProjectCard({
           style={{ background: `linear-gradient(to top, ${COLORS.primary}, transparent, transparent)` }}
         />
 
-        {/* Status pill top-left */}
         <div className="absolute top-4 left-4 sm:top-5 sm:left-5">
           <span
             className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[10px] sm:text-xs font-semibold uppercase tracking-wider"
@@ -930,7 +924,8 @@ function ProjectCard({
 // ─── Reusable Section Block ──────────────────────────────────────────────────
 function ProjectsSectionBlock({
   status,
-  projects,
+  featuredProjects,   // ← shown in main grid
+  allProjects,        // ← shown in "View All" modal
   label,
   labelIcon: LabelIcon,
   headingWord1,
@@ -940,7 +935,8 @@ function ProjectsSectionBlock({
   onOpenAll,
 }: {
   status: ProjectStatus;
-  projects: OngoingProject[];
+  featuredProjects: OngoingProject[];
+  allProjects: OngoingProject[];
   label: string;
   labelIcon: LucideIcon;
   headingWord1: string;
@@ -949,10 +945,18 @@ function ProjectsSectionBlock({
   onOpen: (project: OngoingProject) => void;
   onOpenAll: () => void;
 }) {
-  if (projects.length === 0) return null;
+  // Nothing to show at all → skip section entirely
+  if (allProjects.length === 0) return null;
 
-  const visibleProjects = projects.slice(0, 4);
-  const hasMore = projects.length > 4;
+  // Show up to 4 featured in the main grid.
+  // Fallback: if NO featured exist, just show first 4 of all (so section never looks empty).
+  const visibleProjects =
+    featuredProjects.length > 0
+      ? featuredProjects.slice(0, 4)
+      : allProjects.slice(0, 4);
+
+  // "View All" button should appear whenever total > what's currently visible
+  const hasMore = allProjects.length > visibleProjects.length;
 
   return (
     <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 relative z-10">
@@ -979,7 +983,7 @@ function ProjectsSectionBlock({
         </div>
       </AnimatedSection>
 
-      {/* Grid */}
+      {/* Grid — featured only */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 xl:gap-8">
         {visibleProjects.map((project, idx) => (
           <AnimatedSection key={project._id} delay={idx * 0.1}>
@@ -988,7 +992,7 @@ function ProjectsSectionBlock({
         ))}
       </div>
 
-      {/* View All */}
+      {/* View All → opens modal with ALL projects of this status */}
       {hasMore && (
         <AnimatedSection delay={0.4}>
           <div className="mt-10 lg:mt-12 text-center">
@@ -1015,7 +1019,7 @@ function ProjectsSectionBlock({
               }}
             >
               <Icons.LayoutGrid className="w-5 h-5" />
-              <span>View All {projects.length} {status === 'completed' ? 'Delivered' : 'Ongoing'} Projects</span>
+              <span>View All {allProjects.length} {status === 'completed' ? 'Delivered' : 'Ongoing'} Projects</span>
               <Icons.ArrowRight className="w-5 h-5" />
             </motion.button>
           </div>
@@ -1055,8 +1059,13 @@ export function OngoingProjectsSection() {
     fetchProjects();
   }, []);
 
-  const ongoingList = useMemo(() => projects.filter((p) => !isCompleted(p)), [projects]);
-  const completedList = useMemo(() => projects.filter((p) => isCompleted(p)), [projects]);
+  // ── All projects grouped by status ──
+  const ongoingList   = useMemo(() => projects.filter((p) => !isCompleted(p)), [projects]);
+  const completedList = useMemo(() => projects.filter((p) =>  isCompleted(p)), [projects]);
+
+  // ── Featured projects grouped by status ──
+  const featuredOngoing   = useMemo(() => ongoingList.filter(isFeatured),   [ongoingList]);
+  const featuredCompleted = useMemo(() => completedList.filter(isFeatured), [completedList]);
 
   if (loading || projects.length === 0) return null;
 
@@ -1070,9 +1079,10 @@ export function OngoingProjectsSection() {
     setTimeout(() => setSelectedProject(null), 300);
   };
 
+  // Modal shows the FULL list (all featured + all non-featured of that status)
   const modalProjects =
     allModalStatus === 'completed' ? completedList :
-    allModalStatus === 'ongoing' ? ongoingList : [];
+    allModalStatus === 'ongoing'   ? ongoingList   : [];
 
   return (
     <>
@@ -1113,7 +1123,8 @@ export function OngoingProjectsSection() {
 
           <ProjectsSectionBlock
             status="ongoing"
-            projects={ongoingList}
+            featuredProjects={featuredOngoing}
+            allProjects={ongoingList}
             label="Live Operations"
             labelIcon={Icons.Zap}
             headingWord1="Ongoing"
@@ -1150,7 +1161,8 @@ export function OngoingProjectsSection() {
 
           <ProjectsSectionBlock
             status="completed"
-            projects={completedList}
+            featuredProjects={featuredCompleted}
+            allProjects={completedList}
             label="Proven Track Record"
             labelIcon={Icons.Award}
             headingWord1="Successfully"
@@ -1160,7 +1172,7 @@ export function OngoingProjectsSection() {
             onOpenAll={() => setAllModalStatus('completed')}
           />
 
-          {/* Career CTA Banner — placed after the last section */}
+          {/* Career CTA Banner */}
           <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 relative z-10">
             <AnimatedSection delay={0.5}>
               <div className="mt-12 lg:mt-16 text-center">

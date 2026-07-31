@@ -89,7 +89,7 @@ export interface TeamMember {
   _id: string;
   name: string;
   role: string;
-  displayorder: string;
+  level: number;
   img?: string;
   desc?: string;
   createdAt?: string;
@@ -126,6 +126,7 @@ export interface OngoingProject {
   createdAt: string;    // used for sorting
   updatedAt: string;
   status: string;
+  featured?: boolean;
 }
 
 // ==================== UPCOMING PROJECT ====================
