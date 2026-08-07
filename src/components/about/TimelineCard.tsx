@@ -63,10 +63,9 @@ export function TimelineCard({ event, align }: TimelineCardProps) {
         }}
       />
 
-      {/* Description */}
+      {/* Description — always justified */}
       <p
-        className={`text-sm xl:text-base 2xl:text-lg leading-relaxed mb-4 xl:mb-6
-                    ${align === 'right' ? 'lg:text-right' : ''}`}
+        className="text-sm xl:text-base 2xl:text-lg leading-relaxed mb-4 xl:mb-6 text-justify"
         style={{ color: COLORS.textHalf }}
       >
         {event.description}

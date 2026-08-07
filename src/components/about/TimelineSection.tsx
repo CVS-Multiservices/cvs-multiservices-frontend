@@ -92,17 +92,19 @@ export function TimelineSection() {
                 key={event._id ?? index}
                 className="relative mb-12 xl:mb-16 2xl:mb-20"
               >
+
                 {/* ── DESKTOP ── */}
                 <div className="hidden lg:flex items-start">
 
                   {/* Left side */}
-                  <div className="w-[calc(50%-44px)]">
+                  <div className="w-[calc(50%-44px)] flex flex-col items-end">
                     {isEven && (
-                      <AnimatedSection direction="left" delay={index * 0.08}>
-                        <TimelineCard event={event} align="right" />
+                      <AnimatedSection direction="left" delay={index * 0.08} className="w-full">
+                        <TimelineCard event={event} align="left" />  {/* ✅ changed to "left" */}
                       </AnimatedSection>
                     )}
                   </div>
+
 
                   {/* Center node */}
                   <div className="w-[88px] flex flex-col items-center relative z-10 pt-1">
@@ -116,9 +118,8 @@ export function TimelineSection() {
                         background: event.featured
                           ? COLORS.goldGradientDark
                           : COLORS.timelineNodeBg,
-                        border: `3px solid ${
-                          event.featured ? COLORS.accent : COLORS.goldBorder35
-                        }`,
+                        border: `3px solid ${event.featured ? COLORS.accent : COLORS.goldBorder35
+                          }`,
                         boxShadow: event.featured
                           ? COLORS.timelineFeaturedShadow
                           : COLORS.timelineNodeShadow,
@@ -127,9 +128,7 @@ export function TimelineSection() {
                       <IconComponent
                         className="w-6 h-6"
                         style={{
-                          color: event.featured
-                            ? COLORS.primary
-                            : COLORS.accent,
+                          color: event.featured ? COLORS.primary : COLORS.accent,
                         }}
                       />
                     </motion.div>
@@ -138,9 +137,7 @@ export function TimelineSection() {
                     <div
                       className="mt-2 font-mono text-xs font-bold tracking-widest text-center"
                       style={{
-                        color: event.featured
-                          ? COLORS.accent
-                          : COLORS.goldIconSoft,
+                        color: event.featured ? COLORS.accent : COLORS.goldIconSoft,
                       }}
                     >
                       {event.year}
@@ -148,10 +145,10 @@ export function TimelineSection() {
                   </div>
 
                   {/* Right side */}
-                  <div className="w-[calc(50%-44px)]">
+                  <div className="w-[calc(50%-44px)] flex flex-col items-start">
                     {!isEven && (
-                      <AnimatedSection direction="right" delay={index * 0.08}>
-                        <TimelineCard event={event} align="left" />
+                      <AnimatedSection direction="right" delay={index * 0.08} className="w-full">
+                        <TimelineCard event={event} align="left" />  {/* ✅ already "left" */}
                       </AnimatedSection>
                     )}
                   </div>
@@ -169,9 +166,8 @@ export function TimelineSection() {
                         background: event.featured
                           ? COLORS.goldGradientDark
                           : COLORS.timelineNodeBg,
-                        border: `2px solid ${
-                          event.featured ? COLORS.accent : COLORS.goldBorder35
-                        }`,
+                        border: `2px solid ${event.featured ? COLORS.accent : COLORS.goldBorder35
+                          }`,
                       }}
                     >
                       <IconComponent className="w-5 h-5" />
