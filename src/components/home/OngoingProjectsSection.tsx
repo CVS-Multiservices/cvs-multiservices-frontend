@@ -124,7 +124,7 @@ function ProjectDetailModal({
                       ) : (
                         <Icons.Loader className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin" />
                       )}
-                      {completed ? 'Delivered' : 'In Progress'}
+                      {completed ? 'Completed' : 'Ongoing'}
                     </span>
                   </div>
 
@@ -681,7 +681,7 @@ function AllProjectsModal({
                                 ) : (
                                   <Icons.Loader className="w-2.5 h-2.5 animate-spin" />
                                 )}
-                                {completed ? 'Delivered' : 'Live'}
+                                {completed ? 'Completed' : 'Ongoing'}
                               </span>
                             </div>
 
@@ -828,7 +828,7 @@ function ProjectCard({
             ) : (
               <Icons.Loader className="w-3 h-3 sm:w-3.5 sm:h-3.5 animate-spin" />
             )}
-            {completed ? 'Delivered' : 'In Progress'}
+            {completed ? 'Completed' : 'Ongoing'}
           </span>
         </div>
 
@@ -924,8 +924,8 @@ function ProjectCard({
 // ─── Reusable Section Block ──────────────────────────────────────────────────
 function ProjectsSectionBlock({
   status,
-  featuredProjects,   // ← shown in main grid
-  allProjects,        // ← shown in "View All" modal
+  featuredProjects,
+  allProjects,
   label,
   labelIcon: LabelIcon,
   headingWord1,
@@ -945,17 +945,13 @@ function ProjectsSectionBlock({
   onOpen: (project: OngoingProject) => void;
   onOpenAll: () => void;
 }) {
-  // Nothing to show at all → skip section entirely
   if (allProjects.length === 0) return null;
 
-  // Show up to 4 featured in the main grid.
-  // Fallback: if NO featured exist, just show first 4 of all (so section never looks empty).
   const visibleProjects =
     featuredProjects.length > 0
       ? featuredProjects.slice(0, 4)
       : allProjects.slice(0, 4);
 
-  // "View All" button should appear whenever total > what's currently visible
   const hasMore = allProjects.length > visibleProjects.length;
 
   return (
@@ -983,7 +979,7 @@ function ProjectsSectionBlock({
         </div>
       </AnimatedSection>
 
-      {/* Grid — featured only */}
+      {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 xl:gap-8">
         {visibleProjects.map((project, idx) => (
           <AnimatedSection key={project._id} delay={idx * 0.1}>
@@ -992,7 +988,7 @@ function ProjectsSectionBlock({
         ))}
       </div>
 
-      {/* View All → opens modal with ALL projects of this status */}
+      {/* View All Button */}
       {hasMore && (
         <AnimatedSection delay={0.4}>
           <div className="mt-10 lg:mt-12 text-center">
@@ -1019,7 +1015,10 @@ function ProjectsSectionBlock({
               }}
             >
               <Icons.LayoutGrid className="w-5 h-5" />
-              <span>View All {allProjects.length} {status === 'completed' ? 'Delivered' : 'Ongoing'} Projects</span>
+              <span>
+                View All {allProjects.length}{' '}
+                {status === 'completed' ? 'Completed' : 'Ongoing'} Projects
+              </span>
               <Icons.ArrowRight className="w-5 h-5" />
             </motion.button>
           </div>
@@ -1059,11 +1058,9 @@ export function OngoingProjectsSection() {
     fetchProjects();
   }, []);
 
-  // ── All projects grouped by status ──
   const ongoingList   = useMemo(() => projects.filter((p) => !isCompleted(p)), [projects]);
   const completedList = useMemo(() => projects.filter((p) =>  isCompleted(p)), [projects]);
 
-  // ── Featured projects grouped by status ──
   const featuredOngoing   = useMemo(() => ongoingList.filter(isFeatured),   [ongoingList]);
   const featuredCompleted = useMemo(() => completedList.filter(isFeatured), [completedList]);
 
@@ -1079,7 +1076,6 @@ export function OngoingProjectsSection() {
     setTimeout(() => setSelectedProject(null), 300);
   };
 
-  // Modal shows the FULL list (all featured + all non-featured of that status)
   const modalProjects =
     allModalStatus === 'completed' ? completedList :
     allModalStatus === 'ongoing'   ? ongoingList   : [];
@@ -1096,7 +1092,7 @@ export function OngoingProjectsSection() {
         onClose={() => setAllModalStatus(null)}
         onSelectProject={openModal}
         projects={modalProjects}
-        title={allModalStatus === 'completed' ? 'Delivered Projects' : 'Ongoing Projects'}
+        title={allModalStatus === 'completed' ? 'Completed Projects' : 'Ongoing Projects'}
         status={allModalStatus || 'ongoing'}
       />
 
@@ -1136,7 +1132,7 @@ export function OngoingProjectsSection() {
         </section>
       )}
 
-      {/* ─── DELIVERED / COMPLETED PROJECTS SECTION ─── */}
+      {/* ─── COMPLETED PROJECTS SECTION ─── */}
       {completedList.length > 0 && (
         <section
           className="py-20 lg:py-28 relative overflow-hidden"
@@ -1166,7 +1162,7 @@ export function OngoingProjectsSection() {
             label="Proven Track Record"
             labelIcon={Icons.Award}
             headingWord1="Successfully"
-            headingWord2="Delivered"
+            headingWord2="Completed"
             description="A legacy of successfully completed engagements — projects delivered on time, within scope, and to client satisfaction."
             onOpen={openModal}
             onOpenAll={() => setAllModalStatus('completed')}

@@ -54,17 +54,30 @@ const pluralize = (role: string) => {
 
 const buildGroupTitle = (role: string, count: number) => {
   if (count === 1) return role;
-  if (/(head|manager|executive|lead|officer|specialist|associate|coordinator)$/i.test(role)) {
+  if (
+    /(head|manager|executive|lead|officer|specialist|associate|coordinator)$/i.test(
+      role
+    )
+  ) {
     return pluralize(role);
   }
   return `${role} Team`;
+};
+
+// ─── BDA detection (for sorting BDA group to top) ─────────────
+const isBDARole = (role: string) => {
+  const r = role.toLowerCase();
+  return (
+    r.includes('bda') ||
+    r.includes('business development') ||
+    r.includes('business dev')
+  );
 };
 
 export function TeamSection() {
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
   const location = useLocation();
-  const [openKey, setOpenKey] = useState<string | null>(null);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
   // ─── Fetch ────────────────────────────────────────────────
@@ -134,39 +147,24 @@ export function TeamSection() {
     });
 
     const built: RoleGroup[] = Array.from(roleMap.entries())
-      .sort((a, b) => a[0].localeCompare(b[0]))
       .map(([role, members]) => ({
         key: role.toLowerCase().replace(/\s+/g, '-'),
         role,
         title: buildGroupTitle(role, members.length),
         members,
-      }));
+      }))
+      .sort((a, b) => {
+        const aIsBDA = isBDARole(a.role);
+        const bIsBDA = isBDARole(b.role);
+        if (aIsBDA && !bIsBDA) return -1;
+        if (!aIsBDA && bIsBDA) return 1;
+        return a.role.localeCompare(b.role);
+      });
 
     return { executives: execs, groups: built };
   }, [team]);
 
   if (loading || team.length === 0) return null;
-
-  const toggle = (key: string) =>
-    setOpenKey((prev) => (prev === key ? null : key));
-
-  // ─── Chevron ──────────────────────────────────────────────
-  const Chevron = ({ open }: { open: boolean }) => (
-    <motion.svg
-      animate={{ rotate: open ? 180 : 0 }}
-      transition={{ duration: 0.3, ease: [0.4, 0, 0.2, 1] }}
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </motion.svg>
-  );
 
   // ─── Zoom icon overlay (shown on hover) ───────────────────
   const ZoomBadge = () => (
@@ -178,7 +176,14 @@ export function TeamSection() {
         color: COLORS.accent,
       }}
     >
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+      <svg
+        width="14"
+        height="14"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2.5"
+      >
         <circle cx="11" cy="11" r="8" />
         <line x1="21" y1="21" x2="16.65" y2="16.65" />
         <line x1="11" y1="8" x2="11" y2="14" />
@@ -199,7 +204,11 @@ export function TeamSection() {
       initial={{ opacity: 0, y: 30 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.08, duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+      transition={{
+        delay: index * 0.08,
+        duration: 0.55,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       id={member.name.toLowerCase().replace(/\s+/g, '-')}
       className="group relative cursor-pointer"
       onClick={() => setSelectedMember(member)}
@@ -245,56 +254,120 @@ export function TeamSection() {
             {member.name}
           </h3>
           <div className="flex items-center justify-center gap-3 mt-3">
-            <span className="h-px w-5" style={{ background: COLORS.goldBorderStrong }} />
+            <span
+              className="h-px w-5"
+              style={{ background: COLORS.goldBorderStrong }}
+            />
             <p
               className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.24em] whitespace-nowrap"
               style={{ color: COLORS.accent }}
             >
               {member.role}
             </p>
-            <span className="h-px w-5" style={{ background: COLORS.goldBorderStrong }} />
+            <span
+              className="h-px w-5"
+              style={{ background: COLORS.goldBorderStrong }}
+            />
           </div>
         </div>
       </div>
     </motion.div>
   );
 
-  // ─── MEMBER TILE (accordion) ──────────────────────────────
-  const MemberTile = ({ member }: { member: TeamMember }) => (
+  // ─── LIST ITEM ROW ────────────────────────────────────────
+  const MemberListItem = ({
+    member,
+    index,
+  }: {
+    member: TeamMember;
+    index: number;
+  }) => (
     <motion.div
+      initial={{ opacity: 0, x: -10 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{
+        delay: Math.min(index * 0.03, 0.3),
+        duration: 0.35,
+        ease: [0.22, 1, 0.36, 1],
+      }}
       id={member.name.toLowerCase().replace(/\s+/g, '-')}
-      whileHover={{ y: -4 }}
       onClick={() => setSelectedMember(member)}
-      className="group relative w-full rounded-xl overflow-hidden border transition-all duration-300 cursor-pointer"
+      className="group flex items-center gap-3 sm:gap-4 px-3 sm:px-5 py-2.5 sm:py-3
+                 rounded-xl cursor-pointer transition-all duration-200"
       style={{
-        borderColor: COLORS.dividerGold,
-        background: COLORS.cardBgMedium,
-        boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+        background: 'transparent',
+      }}
+      onMouseEnter={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.background = `${COLORS.accent}08`;
+      }}
+      onMouseLeave={(e) => {
+        const el = e.currentTarget as HTMLElement;
+        el.style.background = 'transparent';
       }}
     >
-      <div className="aspect-[3/4] overflow-hidden relative">
+      {/* Small avatar */}
+      <div
+        className="flex-shrink-0 w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden border-2 transition-all duration-300 group-hover:scale-110 group-hover:shadow-lg"
+        style={{
+          borderColor: COLORS.dividerGold,
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLElement).style.borderColor = COLORS.accent;
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.borderColor = COLORS.dividerGold;
+        }}
+      >
         <img
           src={member.img}
           alt={member.name}
-          className="w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover object-top"
+          loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/10 to-transparent" />
-        <ZoomBadge />
       </div>
-      <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-left">
+
+      {/* Name */}
+      <div className="flex-1 min-w-0">
         <h5
-          className="font-playfair font-bold text-sm sm:text-base leading-tight text-white truncate"
+          className="font-rajdhani font-bold text-sm sm:text-base leading-tight truncate transition-colors duration-200"
+          style={{ color: COLORS.white }}
           title={member.name}
         >
           {member.name}
         </h5>
         <p
-          className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.15em] mt-1.5 truncate"
-          style={{ color: COLORS.accent }}
+          className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-[0.12em] mt-0.5 truncate"
+          style={{ color: COLORS.textHalf }}
           title={member.role}
         >
           {member.role}
         </p>
+      </div>
+
+      {/* View arrow */}
+      <div
+        className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center
+                   opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-0.5"
+        style={{
+          background: `${COLORS.accent}15`,
+          border: `1px solid ${COLORS.accent}30`,
+          color: COLORS.accent,
+        }}
+      >
+        <svg
+          width="12"
+          height="12"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
       </div>
     </motion.div>
   );
@@ -333,7 +406,9 @@ export function TeamSection() {
         {/* Heading */}
         <AnimatedSection>
           <div className="text-center mb-14 lg:mb-20">
-            <div className="section-label mx-auto w-fit mb-4">Our Organization</div>
+            <div className="section-label mx-auto w-fit mb-4">
+              Our Organization
+            </div>
             <h2
               className="font-playfair text-3xl sm:text-4xl xl:text-5xl 2xl:text-6xl font-bold mb-4"
               style={{ color: COLORS.white }}
@@ -385,9 +460,9 @@ export function TeamSection() {
           </div>
         )}
 
-        {/* Accordions */}
+        {/* ─── Departments & Teams (List View) ─── */}
         {groups.length > 0 && (
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-5xl mx-auto">
             <AnimatedSection>
               <div className="flex items-center gap-4 mb-10 lg:mb-14">
                 <div
@@ -411,124 +486,84 @@ export function TeamSection() {
               </div>
             </AnimatedSection>
 
-            <div className="space-y-4 sm:space-y-5">
-              {groups.map((group, idx) => {
-                const isOpen = openKey === group.key;
-                return (
-                  <motion.div
-                    key={group.key}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.04, duration: 0.4 }}
-                    className="rounded-2xl overflow-hidden border backdrop-blur-md transition-all duration-300"
+            {/* ── Role groups ── */}
+            <div className="space-y-8 sm:space-y-10">
+              {groups.map((group, gIdx) => (
+                <AnimatedSection key={group.key} delay={gIdx * 0.05}>
+                  <div
+                    className="rounded-2xl overflow-hidden border"
                     style={{
-                      borderColor: isOpen ? COLORS.accent : COLORS.dividerGold,
+                      borderColor: COLORS.dividerGold,
                       background: `${COLORS.cardBgMedium}88`,
-                      boxShadow: isOpen
-                        ? `0 16px 48px rgba(0,0,0,0.45), 0 0 0 1px ${COLORS.accent}25`
-                        : `0 8px 24px rgba(0,0,0,0.3)`,
+                      boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
                     }}
                   >
-                    <button
-                      onClick={() => toggle(group.key)}
-                      className="w-full flex items-center gap-4 sm:gap-6 lg:gap-8 p-5 sm:p-7 lg:p-8 xl:p-10 text-left transition-colors"
+                    {/* Group header */}
+                    <div
+                      className="flex items-center gap-3 sm:gap-4 px-4 sm:px-6 py-4 sm:py-5"
                       style={{
-                        background: isOpen
-                          ? `linear-gradient(90deg, ${COLORS.cardBgMedium}, transparent)`
-                          : 'transparent',
+                        background: `linear-gradient(90deg, ${COLORS.cardBgMedium}, transparent)`,
+                        borderBottom: `1px solid ${COLORS.dividerGold}`,
                       }}
                     >
                       <div
-                        className="hidden sm:flex flex-shrink-0 w-12 h-12 lg:w-14 lg:h-14 rounded-full items-center justify-center font-mono text-sm lg:text-base font-bold border-2 transition-all duration-300"
+                        className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center
+                                   font-mono text-xs sm:text-sm font-bold border-2"
                         style={{
-                          borderColor: isOpen ? COLORS.accent : COLORS.dividerGold,
-                          color: isOpen ? COLORS.accent : COLORS.textHalf,
-                          background: isOpen ? `${COLORS.accent}12` : `${COLORS.darkAlt}66`,
+                          borderColor: COLORS.accent,
+                          color: COLORS.accent,
+                          background: `${COLORS.accent}12`,
                         }}
                       >
-                        {String(idx + 1).padStart(2, '0')}
+                        {String(gIdx + 1).padStart(2, '0')}
                       </div>
 
                       <div className="flex-1 min-w-0">
-                        <h3
-                          className="font-playfair font-bold text-lg sm:text-xl lg:text-2xl xl:text-3xl leading-tight"
+                        <h4
+                          className="font-playfair font-bold text-base sm:text-lg lg:text-xl leading-tight truncate"
                           style={{ color: COLORS.white }}
                         >
                           {group.title}
-                        </h3>
+                        </h4>
                       </div>
 
                       <div
-                        className="hidden md:flex items-center gap-2.5 px-4 py-2 rounded-full border font-semibold text-xs uppercase tracking-widest"
+                        className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border
+                                   font-semibold text-[10px] sm:text-xs uppercase tracking-widest"
                         style={{
-                          borderColor: isOpen ? COLORS.accent : COLORS.dividerGold,
-                          color: isOpen ? COLORS.accent : COLORS.textHalf,
+                          borderColor: COLORS.dividerGold,
+                          color: COLORS.textHalf,
                           background: `${COLORS.darkAlt}88`,
                         }}
                       >
-                        <span className="font-mono text-sm">{group.members.length}</span>
-                        <span>{group.members.length === 1 ? 'Member' : 'Members'}</span>
+                        <span className="font-mono text-xs sm:text-sm" style={{ color: COLORS.accent }}>
+                          {group.members.length}
+                        </span>
+                        <span className="hidden sm:inline">
+                          {group.members.length === 1 ? 'Member' : 'Members'}
+                        </span>
                       </div>
+                    </div>
 
-                      <div
-                        className="md:hidden flex-shrink-0 min-w-[32px] h-8 px-2.5 rounded-full flex items-center justify-center font-mono text-xs font-bold border"
-                        style={{
-                          borderColor: isOpen ? COLORS.accent : COLORS.dividerGold,
-                          color: isOpen ? COLORS.accent : COLORS.textHalf,
-                          background: `${COLORS.darkAlt}88`,
-                        }}
-                      >
-                        {group.members.length}
-                      </div>
-
-                      <div
-                        className="flex-shrink-0 w-10 h-10 lg:w-11 lg:h-11 rounded-full flex items-center justify-center border transition-all duration-300"
-                        style={{
-                          borderColor: isOpen ? COLORS.accent : COLORS.dividerGold,
-                          color: isOpen ? COLORS.accent : COLORS.textHalf,
-                          background: isOpen ? `${COLORS.accent}12` : 'transparent',
-                        }}
-                      >
-                        <Chevron open={isOpen} />
-                      </div>
-                    </button>
-
-                    <AnimatePresence initial={false}>
-                      {isOpen && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: 'auto', opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-                          className="overflow-hidden"
-                        >
-                          <div
-                            className="border-t px-5 sm:px-7 lg:px-8 xl:px-10 py-6 sm:py-8 lg:py-10"
-                            style={{
-                              borderColor: COLORS.dividerGold,
-                              background: `linear-gradient(180deg, ${COLORS.darkAlt}44, transparent)`,
-                            }}
-                          >
+                    {/* Members list */}
+                    <div className="py-2 sm:py-3">
+                      {group.members.map((member, mIdx) => (
+                        <div key={member._id}>
+                          <MemberListItem member={member} index={mIdx} />
+                          {mIdx < group.members.length - 1 && (
                             <div
-                              className="grid gap-4 sm:gap-5 lg:gap-6
-                                         grid-cols-2
-                                         sm:grid-cols-3
-                                         md:grid-cols-4
-                                         lg:grid-cols-5
-                                         xl:grid-cols-6"
-                            >
-                              {group.members.map((member) => (
-                                <MemberTile key={member._id} member={member} />
-                              ))}
-                            </div>
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
-                  </motion.div>
-                );
-              })}
+                              className="mx-4 sm:mx-6 h-px"
+                              style={{
+                                background: `linear-gradient(90deg, transparent, ${COLORS.dividerGold}40, transparent)`,
+                              }}
+                            />
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </AnimatedSection>
+              ))}
             </div>
           </div>
         )}
@@ -578,7 +613,14 @@ export function TeamSection() {
                 }}
                 aria-label="Close"
               >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
                   <line x1="18" y1="6" x2="6" y2="18" />
                   <line x1="6" y1="6" x2="18" y2="18" />
                 </svg>
@@ -634,14 +676,20 @@ export function TeamSection() {
                   transition={{ delay: 0.25, duration: 0.4 }}
                   className="flex items-center justify-center gap-3 mt-4"
                 >
-                  <span className="h-px w-8" style={{ background: COLORS.goldBorderStrong }} />
+                  <span
+                    className="h-px w-8"
+                    style={{ background: COLORS.goldBorderStrong }}
+                  />
                   <p
                     className="text-xs sm:text-[13px] font-semibold uppercase tracking-[0.28em]"
                     style={{ color: COLORS.accent }}
                   >
                     {selectedMember.role}
                   </p>
-                  <span className="h-px w-8" style={{ background: COLORS.goldBorderStrong }} />
+                  <span
+                    className="h-px w-8"
+                    style={{ background: COLORS.goldBorderStrong }}
+                  />
                 </motion.div>
               </div>
             </motion.div>

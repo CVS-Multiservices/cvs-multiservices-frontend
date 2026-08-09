@@ -26,7 +26,7 @@ function StatusBadge({ project }: { project: OngoingProject }) {
         bg: 'rgba(16, 185, 129, 0.15)',
         border: 'rgba(16, 185, 129, 0.4)',
         color: '#34d399',
-        label: 'Delivered',
+        label: 'Completed',
         Icon: Icons.CheckCircle2,
         spin: false,
       }
@@ -34,7 +34,7 @@ function StatusBadge({ project }: { project: OngoingProject }) {
         bg: 'rgba(251, 191, 36, 0.15)',
         border: 'rgba(251, 191, 36, 0.4)',
         color: '#fbbf24',
-        label: 'Live',
+        label: 'Ongoing',
         Icon: Icons.Loader,
         spin: true,
       };
@@ -109,7 +109,8 @@ export function AllServiceProjectsModal({
   // Filtered + sorted (ongoing first when 'all')
   const filteredProjects = useMemo(() => {
     let list = projects;
-    if (statusFilter === 'ongoing') list = projects.filter((p) => !isCompleted(p));
+    if (statusFilter === 'ongoing')
+      list = projects.filter((p) => !isCompleted(p));
     else if (statusFilter === 'completed') list = projects.filter(isCompleted);
 
     return [...list].sort((a, b) => {
@@ -186,8 +187,8 @@ export function AllServiceProjectsModal({
                     className="text-xs sm:text-sm mt-0.5"
                     style={{ color: 'rgba(255,255,255,0.4)' }}
                   >
-                    Showing {filteredProjects.length} of {projects.length} project
-                    {projects.length !== 1 ? 's' : ''} in this vertical
+                    Showing {filteredProjects.length} of {projects.length}{' '}
+                    project{projects.length !== 1 ? 's' : ''} in this vertical
                   </p>
                 </div>
 
@@ -227,7 +228,7 @@ export function AllServiceProjectsModal({
                   },
                   {
                     key: 'ongoing' as StatusFilter,
-                    label: 'Live',
+                    label: 'Ongoing',
                     count: counts.ongoing,
                     themeColor: '#fbbf24',
                     Icon: Icons.Loader,
@@ -235,7 +236,7 @@ export function AllServiceProjectsModal({
                   },
                   {
                     key: 'completed' as StatusFilter,
-                    label: 'Delivered',
+                    label: 'Completed',
                     count: counts.completed,
                     themeColor: '#34d399',
                     Icon: Icons.CheckCircle2,
@@ -253,15 +254,25 @@ export function AllServiceProjectsModal({
                       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full
                                   text-[10px] sm:text-xs font-semibold uppercase tracking-wider
                                   transition-all duration-200
-                                  ${disabled ? 'opacity-40 cursor-not-allowed' : 'cursor-pointer hover:scale-105'}`}
+                                  ${
+                                    disabled
+                                      ? 'opacity-40 cursor-not-allowed'
+                                      : 'cursor-pointer hover:scale-105'
+                                  }`}
                       style={{
-                        background: active ? `${themeColor}25` : 'rgba(255,255,255,0.04)',
-                        border: `1px solid ${active ? themeColor : 'rgba(255,255,255,0.1)'}`,
+                        background: active
+                          ? `${themeColor}25`
+                          : 'rgba(255,255,255,0.04)',
+                        border: `1px solid ${
+                          active ? themeColor : 'rgba(255,255,255,0.1)'
+                        }`,
                         color: active ? themeColor : 'rgba(255,255,255,0.6)',
                       }}
                     >
                       <Icon
-                        className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${spin && active ? 'animate-spin' : ''}`}
+                        className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${
+                          spin && active ? 'animate-spin' : ''
+                        }`}
                       />
                       {label}
                       <span
@@ -270,7 +281,9 @@ export function AllServiceProjectsModal({
                           background: active
                             ? `${themeColor}30`
                             : 'rgba(255,255,255,0.06)',
-                          color: active ? themeColor : 'rgba(255,255,255,0.5)',
+                          color: active
+                            ? themeColor
+                            : 'rgba(255,255,255,0.5)',
                         }}
                       >
                         {count}
@@ -293,12 +306,21 @@ export function AllServiceProjectsModal({
                       border: `1px solid ${color}20`,
                     }}
                   >
-                    <Icons.SearchX className="w-6 h-6 sm:w-7 sm:h-7" style={{ color }} />
+                    <Icons.SearchX
+                      className="w-6 h-6 sm:w-7 sm:h-7"
+                      style={{ color }}
+                    />
                   </div>
-                  <p className="text-sm sm:text-base font-semibold mb-1" style={{ color: '#fff' }}>
+                  <p
+                    className="text-sm sm:text-base font-semibold mb-1"
+                    style={{ color: '#fff' }}
+                  >
                     No projects match this filter
                   </p>
-                  <p className="text-xs sm:text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                  <p
+                    className="text-xs sm:text-sm"
+                    style={{ color: 'rgba(255,255,255,0.4)' }}
+                  >
                     Try selecting a different status.
                   </p>
                   <button
@@ -362,7 +384,7 @@ export function AllServiceProjectsModal({
                               }}
                             />
 
-                            {/* ── Dynamic Status badge ── */}
+                            {/* Dynamic Status badge */}
                             <div className="absolute top-2.5 left-2.5">
                               <StatusBadge project={project} />
                             </div>
@@ -377,7 +399,10 @@ export function AllServiceProjectsModal({
                                   border: `1px solid ${color}40`,
                                 }}
                               >
-                                <ProjIcon className="w-3.5 h-3.5" style={{ color }} />
+                                <ProjIcon
+                                  className="w-3.5 h-3.5"
+                                  style={{ color }}
+                                />
                               </div>
                             </div>
 
@@ -395,7 +420,10 @@ export function AllServiceProjectsModal({
                                   border: `2px solid ${color}`,
                                 }}
                               >
-                                <Icons.Eye className="w-4 h-4" style={{ color }} />
+                                <Icons.Eye
+                                  className="w-4 h-4"
+                                  style={{ color }}
+                                />
                               </div>
                             </div>
                           </div>

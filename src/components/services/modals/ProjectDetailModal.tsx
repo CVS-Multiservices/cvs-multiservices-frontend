@@ -57,7 +57,7 @@ export function ProjectDetailModal({
         bg: 'rgba(16, 185, 129, 0.15)',
         border: 'rgba(16, 185, 129, 0.4)',
         color: '#34d399',
-        label: 'Delivered',
+        label: 'Completed',
         icon: Icons.CheckCircle2,
         pulse: false,
       }
@@ -65,7 +65,7 @@ export function ProjectDetailModal({
         bg: 'rgba(251, 191, 36, 0.15)',
         border: 'rgba(251, 191, 36, 0.4)',
         color: '#fbbf24',
-        label: 'In Progress',
+        label: 'Ongoing',
         icon: Icons.Loader,
         pulse: true,
       };
@@ -169,7 +169,7 @@ export function ProjectDetailModal({
                       </span>
                     </div>
 
-                    {/* ── Dynamic Status badge (top-right, before close btn) ── */}
+                    {/* Dynamic Status badge (top-right, before close btn) */}
                     <div className="absolute top-4 right-14 sm:top-6 sm:right-20 z-10">
                       <span
                         className="px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full
@@ -183,7 +183,9 @@ export function ProjectDetailModal({
                         }}
                       >
                         <StatusIcon
-                          className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${statusTheme.pulse ? 'animate-spin' : ''}`}
+                          className={`w-3 h-3 sm:w-3.5 sm:h-3.5 ${
+                            statusTheme.pulse ? 'animate-spin' : ''
+                          }`}
                         />
                         {statusTheme.label}
                       </span>
@@ -268,7 +270,9 @@ export function ProjectDetailModal({
                         }}
                       >
                         <StatusIcon
-                          className={`w-3 h-3 ${statusTheme.pulse ? 'animate-spin' : ''}`}
+                          className={`w-3 h-3 ${
+                            statusTheme.pulse ? 'animate-spin' : ''
+                          }`}
                         />
                         {statusTheme.label}
                       </span>
@@ -284,8 +288,7 @@ export function ProjectDetailModal({
 
                 {/* Body */}
                 <div className="px-4 sm:px-8 py-5 sm:py-8">
-
-                  {/* ── Status highlight banner (subtle, full-width) ── */}
+                  {/* Status highlight banner */}
                   <div
                     className="mb-5 sm:mb-6 p-3 sm:p-4 rounded-xl flex items-center gap-3"
                     style={{
@@ -302,7 +305,9 @@ export function ProjectDetailModal({
                       }}
                     >
                       <StatusIcon
-                        className={`w-4 h-4 sm:w-5 sm:h-5 ${statusTheme.pulse ? 'animate-spin' : ''}`}
+                        className={`w-4 h-4 sm:w-5 sm:h-5 ${
+                          statusTheme.pulse ? 'animate-spin' : ''
+                        }`}
                         style={{ color: statusTheme.color }}
                       />
                     </div>
@@ -318,8 +323,8 @@ export function ProjectDetailModal({
                         style={{ color: statusTheme.color }}
                       >
                         {completed
-                          ? 'Successfully Delivered'
-                          : 'Currently In Progress'}
+                          ? 'Successfully Completed'
+                          : 'Currently Ongoing'}
                       </div>
                     </div>
                   </div>
@@ -516,11 +521,7 @@ export function ProjectDetailModal({
                       e.currentTarget.style.transform = 'translateY(0)';
                     }}
                   >
-                    <span>
-                      {completed
-                        ? 'Discuss Similar Project'
-                        : 'Discuss Similar Project'}
-                    </span>
+                    <span>Discuss Similar Project</span>
                     <Icons.ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                   </Link>
                 </div>

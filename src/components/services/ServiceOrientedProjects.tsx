@@ -200,7 +200,7 @@ function StatusBadge({
       ) : (
         <Icons.Loader className={`${iconSize} animate-spin`} />
       )}
-      {completed ? 'Delivered' : 'Live'}
+      {completed ? 'Completed' : 'Ongoing'}
     </span>
   );
 }
@@ -223,10 +223,22 @@ function Skeleton() {
 
       <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 relative z-10">
         <div className="text-center mb-10 sm:mb-14 lg:mb-20 animate-pulse">
-          <div className="inline-block h-7 w-36 rounded-full mb-4 sm:mb-6" style={{ background: 'rgba(212,160,23,0.08)' }} />
-          <div className="h-8 sm:h-10 xl:h-12 w-72 sm:w-96 xl:w-[480px] rounded-xl mx-auto mb-3" style={{ background: 'rgba(255,255,255,0.06)' }} />
-          <div className="h-[2px] w-16 sm:w-24 mx-auto mb-4 sm:mb-6 rounded" style={{ background: 'rgba(212,160,23,0.15)' }} />
-          <div className="h-4 w-64 sm:w-80 rounded-lg mx-auto" style={{ background: 'rgba(255,255,255,0.04)' }} />
+          <div
+            className="inline-block h-7 w-36 rounded-full mb-4 sm:mb-6"
+            style={{ background: 'rgba(212,160,23,0.08)' }}
+          />
+          <div
+            className="h-8 sm:h-10 xl:h-12 w-72 sm:w-96 xl:w-[480px] rounded-xl mx-auto mb-3"
+            style={{ background: 'rgba(255,255,255,0.06)' }}
+          />
+          <div
+            className="h-[2px] w-16 sm:w-24 mx-auto mb-4 sm:mb-6 rounded"
+            style={{ background: 'rgba(212,160,23,0.15)' }}
+          />
+          <div
+            className="h-4 w-64 sm:w-80 rounded-lg mx-auto"
+            style={{ background: 'rgba(255,255,255,0.04)' }}
+          />
         </div>
 
         <div className="space-y-6 sm:space-y-10">
@@ -246,12 +258,24 @@ function Skeleton() {
                   borderBottom: '1px solid rgba(212,160,23,0.06)',
                 }}
               >
-                <div className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex-shrink-0" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                <div
+                  className="w-9 h-9 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl flex-shrink-0"
+                  style={{ background: 'rgba(255,255,255,0.06)' }}
+                />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 sm:h-5 w-40 sm:w-56 rounded-lg" style={{ background: 'rgba(255,255,255,0.07)' }} />
-                  <div className="h-3 w-24 sm:w-32 rounded" style={{ background: 'rgba(255,255,255,0.04)' }} />
+                  <div
+                    className="h-4 sm:h-5 w-40 sm:w-56 rounded-lg"
+                    style={{ background: 'rgba(255,255,255,0.07)' }}
+                  />
+                  <div
+                    className="h-3 w-24 sm:w-32 rounded"
+                    style={{ background: 'rgba(255,255,255,0.04)' }}
+                  />
                 </div>
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0" style={{ background: 'rgba(255,255,255,0.05)' }} />
+                <div
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-full flex-shrink-0"
+                  style={{ background: 'rgba(255,255,255,0.05)' }}
+                />
               </div>
 
               {/* Mobile skeleton */}
@@ -265,25 +289,43 @@ function Skeleton() {
                       border: '1px solid rgba(255,255,255,0.05)',
                     }}
                   >
-                    <div className="h-36 w-full" style={{ background: 'rgba(255,255,255,0.05)' }} />
+                    <div
+                      className="h-36 w-full"
+                      style={{ background: 'rgba(255,255,255,0.05)' }}
+                    />
                     <div className="p-3.5 space-y-2">
-                      <div className="h-4 w-3/4 rounded" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                      <div className="h-3 w-1/2 rounded" style={{ background: 'rgba(255,255,255,0.04)' }} />
-                      <div className="h-3 w-2/5 rounded" style={{ background: 'rgba(255,255,255,0.03)' }} />
+                      <div
+                        className="h-4 w-3/4 rounded"
+                        style={{ background: 'rgba(255,255,255,0.06)' }}
+                      />
+                      <div
+                        className="h-3 w-1/2 rounded"
+                        style={{ background: 'rgba(255,255,255,0.04)' }}
+                      />
+                      <div
+                        className="h-3 w-2/5 rounded"
+                        style={{ background: 'rgba(255,255,255,0.03)' }}
+                      />
                     </div>
                   </div>
                 ))}
               </div>
 
-              {/* Desktop skeleton — 6 cols to match new Status col */}
+              {/* Desktop skeleton */}
               <div className="hidden md:block">
                 <div
                   className="grid grid-cols-6 gap-4 px-5 sm:px-6 py-3"
                   style={{ borderBottom: '1px solid rgba(212,160,23,0.06)' }}
                 >
-                  {['w-16', 'w-14', 'w-14', 'w-16', 'w-10', 'w-20'].map((w, idx) => (
-                    <div key={idx} className={`h-3 ${w} rounded`} style={{ background: 'rgba(212,160,23,0.12)' }} />
-                  ))}
+                  {['w-16', 'w-14', 'w-14', 'w-16', 'w-10', 'w-20'].map(
+                    (w, idx) => (
+                      <div
+                        key={idx}
+                        className={`h-3 ${w} rounded`}
+                        style={{ background: 'rgba(212,160,23,0.12)' }}
+                      />
+                    )
+                  )}
                 </div>
 
                 {[1, 2, 3].map((r) => (
@@ -291,20 +333,45 @@ function Skeleton() {
                     key={r}
                     className="grid grid-cols-6 gap-4 items-center px-5 sm:px-6 py-4 sm:py-5"
                     style={{
-                      borderBottom: r < 3 ? '1px solid rgba(255,255,255,0.03)' : 'none',
+                      borderBottom:
+                        r < 3 ? '1px solid rgba(255,255,255,0.03)' : 'none',
                     }}
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-lg flex-shrink-0" style={{ background: 'rgba(255,255,255,0.06)' }} />
-                      <div className="h-4 w-28 rounded" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                      <div
+                        className="w-10 h-10 rounded-lg flex-shrink-0"
+                        style={{ background: 'rgba(255,255,255,0.06)' }}
+                      />
+                      <div
+                        className="h-4 w-28 rounded"
+                        style={{ background: 'rgba(255,255,255,0.06)' }}
+                      />
                     </div>
-                    <div className="h-5 w-16 rounded-full" style={{ background: 'rgba(255,255,255,0.05)' }} />
-                    <div className="h-3 w-20 rounded" style={{ background: 'rgba(255,255,255,0.04)' }} />
-                    <div className="h-3 w-20 rounded" style={{ background: 'rgba(255,255,255,0.04)' }} />
-                    <div className="h-3 w-10 rounded" style={{ background: 'rgba(255,255,255,0.04)' }} />
+                    <div
+                      className="h-5 w-16 rounded-full"
+                      style={{ background: 'rgba(255,255,255,0.05)' }}
+                    />
+                    <div
+                      className="h-3 w-20 rounded"
+                      style={{ background: 'rgba(255,255,255,0.04)' }}
+                    />
+                    <div
+                      className="h-3 w-20 rounded"
+                      style={{ background: 'rgba(255,255,255,0.04)' }}
+                    />
+                    <div
+                      className="h-3 w-10 rounded"
+                      style={{ background: 'rgba(255,255,255,0.04)' }}
+                    />
                     <div className="flex gap-1.5">
-                      <div className="h-5 w-14 rounded-full" style={{ background: 'rgba(255,255,255,0.05)' }} />
-                      <div className="h-5 w-14 rounded-full" style={{ background: 'rgba(255,255,255,0.05)' }} />
+                      <div
+                        className="h-5 w-14 rounded-full"
+                        style={{ background: 'rgba(255,255,255,0.05)' }}
+                      />
+                      <div
+                        className="h-5 w-14 rounded-full"
+                        style={{ background: 'rgba(255,255,255,0.05)' }}
+                      />
                     </div>
                   </div>
                 ))}
@@ -314,7 +381,10 @@ function Skeleton() {
         </div>
 
         <div className="mt-10 sm:mt-14 lg:mt-16 flex justify-center animate-pulse">
-          <div className="h-11 sm:h-14 w-64 sm:w-80 rounded-xl sm:rounded-2xl" style={{ background: 'rgba(212,160,23,0.08)' }} />
+          <div
+            className="h-11 sm:h-14 w-64 sm:w-80 rounded-xl sm:rounded-2xl"
+            style={{ background: 'rgba(212,160,23,0.08)' }}
+          />
         </div>
       </div>
     </section>
@@ -360,7 +430,7 @@ function MobileProjectCard({
             }}
           />
 
-          {/* ── Status badge (top-left) ── */}
+          {/* Status badge (top-left) */}
           <div className="absolute top-2.5 left-2.5">
             <StatusBadge project={project} size="xs" />
           </div>
@@ -406,10 +476,7 @@ function MobileProjectCard({
             className="flex items-center gap-1.5 text-[11px] mb-3"
             style={{ color: 'rgba(255,255,255,0.45)' }}
           >
-            <Icons.MapPin
-              className="w-3 h-3 flex-shrink-0"
-              style={{ color }}
-            />
+            <Icons.MapPin className="w-3 h-3 flex-shrink-0" style={{ color }} />
             <span className="truncate">{project.location}</span>
           </div>
         )}
@@ -533,15 +600,14 @@ export function ServicesOrientedProjects() {
 
     return sortedFeatures
       .map((feature) => {
-        // ── Sort each service's projects: Ongoing first, then Delivered ──
-        const sortedProjects = (featureProjectMap.get(feature._id) ?? []).sort(
-          (a, b) => {
-            const aDone = isCompleted(a);
-            const bDone = isCompleted(b);
-            if (aDone === bDone) return 0;
-            return aDone ? 1 : -1;   // ongoing first
-          }
-        );
+        const sortedProjects = (
+          featureProjectMap.get(feature._id) ?? []
+        ).sort((a, b) => {
+          const aDone = isCompleted(a);
+          const bDone = isCompleted(b);
+          if (aDone === bDone) return 0;
+          return aDone ? 1 : -1; // ongoing first
+        });
         return {
           ...feature,
           matchedProjects: sortedProjects,
@@ -642,7 +708,6 @@ export function ServicesOrientedProjects() {
         />
 
         <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 relative z-10">
-
           <AnimatedSection>
             <div className="text-center mb-10 sm:mb-14 lg:mb-20">
               <div
@@ -692,16 +757,20 @@ export function ServicesOrientedProjects() {
             {featuresWithProjects.map((feature, sIdx) => {
               const IconComponent = getIcon(feature.icon);
               const color = feature.color ?? '#d4a017';
-              const visibleProjects = feature.matchedProjects.slice(0, MAX_VISIBLE);
-              const remaining = feature.matchedProjects.length - MAX_VISIBLE;
+              const visibleProjects = feature.matchedProjects.slice(
+                0,
+                MAX_VISIBLE
+              );
+              const remaining =
+                feature.matchedProjects.length - MAX_VISIBLE;
               const hasMore = remaining > 0;
 
-              // ── Compute status counts for this service ──
+              // Compute status counts for this service
               const ongoingCount = feature.matchedProjects.filter(
                 (p) => !isCompleted(p)
               ).length;
-              const deliveredCount = feature.matchedProjects.filter(
-                (p) => isCompleted(p)
+              const completedCount = feature.matchedProjects.filter((p) =>
+                isCompleted(p)
               ).length;
 
               return (
@@ -743,7 +812,7 @@ export function ServicesOrientedProjects() {
                         >
                           {feature.title}
                         </h3>
-                        {/* ── Header status summary ── */}
+                        {/* Header status summary */}
                         <div className="flex items-center gap-2 flex-wrap mt-1">
                           <span
                             className="text-[10px] sm:text-xs"
@@ -763,10 +832,10 @@ export function ServicesOrientedProjects() {
                               }}
                             >
                               <Icons.Loader className="w-2.5 h-2.5 animate-spin" />
-                              {ongoingCount} Live
+                              {ongoingCount} Ongoing
                             </span>
                           )}
-                          {deliveredCount > 0 && (
+                          {completedCount > 0 && (
                             <span
                               className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full
                                          text-[9px] sm:text-[10px] font-semibold"
@@ -777,7 +846,7 @@ export function ServicesOrientedProjects() {
                               }}
                             >
                               <Icons.CheckCircle2 className="w-2.5 h-2.5" />
-                              {deliveredCount} Delivered
+                              {completedCount} Completed
                             </span>
                           )}
                         </div>
@@ -844,10 +913,18 @@ export function ServicesOrientedProjects() {
                           <thead>
                             <tr
                               style={{
-                                borderBottom: '1px solid rgba(212,160,23,0.08)',
+                                borderBottom:
+                                  '1px solid rgba(212,160,23,0.08)',
                               }}
                             >
-                              {['Project', 'Status', 'Client', 'Location', 'Team', 'Highlights'].map((col) => (
+                              {[
+                                'Project',
+                                'Status',
+                                'Client',
+                                'Location',
+                                'Team',
+                                'Highlights',
+                              ].map((col) => (
                                 <th
                                   key={col}
                                   className="px-5 sm:px-6 py-3 text-left text-[11px]
@@ -886,7 +963,8 @@ export function ServicesOrientedProjects() {
                                   e.currentTarget.style.background = `${color}08`;
                                 }}
                                 onMouseLeave={(e) => {
-                                  e.currentTarget.style.background = 'transparent';
+                                  e.currentTarget.style.background =
+                                    'transparent';
                                 }}
                               >
                                 {/* Project col */}
@@ -897,7 +975,9 @@ export function ServicesOrientedProjects() {
                                         className="w-10 h-10 rounded-lg overflow-hidden
                                                    flex-shrink-0 border transition-all
                                                    duration-300 group-hover:scale-110"
-                                        style={{ borderColor: `${color}30` }}
+                                        style={{
+                                          borderColor: `${color}30`,
+                                        }}
                                       >
                                         <img
                                           src={project.image}
@@ -922,7 +1002,7 @@ export function ServicesOrientedProjects() {
                                   </div>
                                 </td>
 
-                                {/* ── Status col ── */}
+                                {/* Status col */}
                                 <td className="px-5 sm:px-6 py-4 sm:py-5">
                                   <StatusBadge project={project} />
                                 </td>
@@ -970,28 +1050,32 @@ export function ServicesOrientedProjects() {
                                 {/* Highlights col */}
                                 <td className="px-5 sm:px-6 py-4 sm:py-5">
                                   <div className="flex flex-wrap gap-1.5 items-center">
-                                    {project.highlights.slice(0, 2).map((h) => (
-                                      <span
-                                        key={h}
-                                        className="px-2 py-0.5 rounded-full
-                                                   text-[10px] sm:text-xs font-medium
-                                                   truncate max-w-[90px]"
-                                        style={{
-                                          background: `${color}15`,
-                                          border: `1px solid ${color}35`,
-                                          color,
-                                        }}
-                                      >
-                                        {h}
-                                      </span>
-                                    ))}
+                                    {project.highlights
+                                      .slice(0, 2)
+                                      .map((h) => (
+                                        <span
+                                          key={h}
+                                          className="px-2 py-0.5 rounded-full
+                                                     text-[10px] sm:text-xs font-medium
+                                                     truncate max-w-[90px]"
+                                          style={{
+                                            background: `${color}15`,
+                                            border: `1px solid ${color}35`,
+                                            color,
+                                          }}
+                                        >
+                                          {h}
+                                        </span>
+                                      ))}
                                     {project.highlights.length > 2 && (
                                       <span
                                         className="px-2 py-0.5 rounded-full
                                                    text-[10px] sm:text-xs font-medium"
                                         style={{
-                                          background: 'rgba(255,255,255,0.05)',
-                                          border: '1px solid rgba(255,255,255,0.1)',
+                                          background:
+                                            'rgba(255,255,255,0.05)',
+                                          border:
+                                            '1px solid rgba(255,255,255,0.1)',
                                           color: 'rgba(255,255,255,0.4)',
                                         }}
                                       >
