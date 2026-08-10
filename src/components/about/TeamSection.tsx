@@ -74,6 +74,78 @@ const isBDARole = (role: string) => {
   );
 };
 
+// ─── Role merging groups ──────────────────────────────────────
+const ROLE_MERGE_GROUPS: {
+  key: string;
+  label: string;
+  keywords: string[];
+}[] = [
+  {
+    key: 'accountants',
+    label: 'Accountants',
+    keywords: ['accountant'],
+  },
+  {
+    key: 'purchase',
+    label: 'Purchase Department',
+    keywords: ['purchase'],
+  },
+  {
+    key: 'hr',
+    label: 'HR Department',
+    keywords: ['human resource', 'hr '],
+  },
+  {
+    key: 'it',
+    label: 'IT Department',
+    keywords: [
+      'it ',
+      'information technology',
+      'software',
+      'developer',
+      'engineer',
+    ],
+  },
+  {
+    key: 'sales',
+    label: 'Sales Team',
+    keywords: ['sales'],
+  },
+  {
+    key: 'marketing',
+    label: 'Marketing Team',
+    keywords: ['marketing'],
+  },
+  {
+    key: 'logistics',
+    label: 'Logistics Team',
+    keywords: ['logistics', 'supply chain', 'warehouse'],
+  },
+  {
+    key: 'admin',
+    label: 'Administration',
+    keywords: ['admin', 'administration'],
+  },
+  {
+    key: 'finance',
+    label: 'Finance Department',
+    keywords: ['finance', 'financial'],
+  },
+  {
+    key: 'operations',
+    label: 'Operations Team',
+    keywords: ['operation'],
+  },
+];
+
+const findMergeGroup = (role: string) => {
+  const r = role.toLowerCase();
+  return (
+    ROLE_MERGE_GROUPS.find((g) => g.keywords.some((kw) => r.includes(kw))) ??
+    null
+  );
+};
+
 export function TeamSection() {
   const [team, setTeam] = useState<TeamMember[]>([]);
   const [loading, setLoading] = useState(true);
@@ -128,10 +200,11 @@ export function TeamSection() {
     };
   }, [selectedMember]);
 
-  // ─── Dynamic role-based grouping ──────────────────────────
+  // ─── Dynamic role-based grouping with merging ─────────────
   const { executives, groups } = useMemo(() => {
     const execs: TeamMember[] = [];
     const nonExecs: TeamMember[] = [];
+
     team.forEach((m) => {
       if (isExecutiveRole(m.role)) execs.push(m);
       else nonExecs.push(m);
@@ -139,27 +212,61 @@ export function TeamSection() {
 
     execs.sort((a, b) => executiveRank(a.role) - executiveRank(b.role));
 
-    const roleMap = new Map<string, TeamMember[]>();
+    // ── Two maps: merged groups and exact-role groups ──────
+    const mergedMap = new Map<
+      string,
+      { key: string; label: string; members: TeamMember[] }
+    >();
+    const exactMap = new Map<string, TeamMember[]>();
+
     nonExecs.forEach((m) => {
-      const key = m.role.trim();
-      if (!roleMap.has(key)) roleMap.set(key, []);
-      roleMap.get(key)!.push(m);
+      const merge = findMergeGroup(m.role);
+      if (merge) {
+        if (!mergedMap.has(merge.key)) {
+          mergedMap.set(merge.key, {
+            key: merge.key,
+            label: merge.label,
+            members: [],
+          });
+        }
+        mergedMap.get(merge.key)!.members.push(m);
+      } else {
+        const key = m.role.trim();
+        if (!exactMap.has(key)) exactMap.set(key, []);
+        exactMap.get(key)!.push(m);
+      }
     });
 
-    const built: RoleGroup[] = Array.from(roleMap.entries())
-      .map(([role, members]) => ({
+    // ── Build RoleGroup[] from merged map ─────────────────
+    const mergedGroups: RoleGroup[] = Array.from(mergedMap.values()).map(
+      ({ key, label, members }) => ({
+        key,
+        role: label,
+        title: label,
+        members,
+      })
+    );
+
+    // ── Build RoleGroup[] from exact-role map ─────────────
+    const exactGroups: RoleGroup[] = Array.from(exactMap.entries()).map(
+      ([role, members]) => ({
         key: role.toLowerCase().replace(/\s+/g, '-'),
         role,
         title: buildGroupTitle(role, members.length),
         members,
-      }))
-      .sort((a, b) => {
+      })
+    );
+
+    // ── Combine and sort (BDA first, then alphabetical) ───
+    const built: RoleGroup[] = [...mergedGroups, ...exactGroups].sort(
+      (a, b) => {
         const aIsBDA = isBDARole(a.role);
         const bIsBDA = isBDARole(b.role);
         if (aIsBDA && !bIsBDA) return -1;
         if (!aIsBDA && bIsBDA) return 1;
         return a.role.localeCompare(b.role);
-      });
+      }
+    );
 
     return { executives: execs, groups: built };
   }, [team]);
@@ -317,7 +424,8 @@ export function TeamSection() {
           (e.currentTarget as HTMLElement).style.borderColor = COLORS.accent;
         }}
         onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.borderColor = COLORS.dividerGold;
+          (e.currentTarget as HTMLElement).style.borderColor =
+            COLORS.dividerGold;
         }}
       >
         <img
@@ -328,7 +436,7 @@ export function TeamSection() {
         />
       </div>
 
-      {/* Name */}
+      {/* Name + role */}
       <div className="flex-1 min-w-0">
         <h5
           className="font-rajdhani font-bold text-sm sm:text-base leading-tight truncate transition-colors duration-200"
@@ -379,7 +487,7 @@ export function TeamSection() {
       className="py-20 lg:py-28 relative overflow-hidden"
       style={{ background: COLORS.darkAlt }}
     >
-      {/* Background */}
+      {/* Background decorations */}
       <div
         className="absolute inset-0 opacity-[0.02] pointer-events-none"
         style={{
@@ -403,7 +511,7 @@ export function TeamSection() {
       />
 
       <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-24 relative z-10">
-        {/* Heading */}
+        {/* ── Section Heading ── */}
         <AnimatedSection>
           <div className="text-center mb-14 lg:mb-20">
             <div className="section-label mx-auto w-fit mb-4">
@@ -426,7 +534,7 @@ export function TeamSection() {
           </div>
         </AnimatedSection>
 
-        {/* Executive Board */}
+        {/* ── Executive Board ── */}
         {executives.length > 0 && (
           <div className="max-w-7xl mx-auto mb-20 lg:mb-28">
             <AnimatedSection>
@@ -460,7 +568,7 @@ export function TeamSection() {
           </div>
         )}
 
-        {/* ─── Departments & Teams (List View) ─── */}
+        {/* ── Departments & Teams ── */}
         {groups.length > 0 && (
           <div className="max-w-5xl mx-auto">
             <AnimatedSection>
@@ -506,6 +614,7 @@ export function TeamSection() {
                         borderBottom: `1px solid ${COLORS.dividerGold}`,
                       }}
                     >
+                      {/* Index badge */}
                       <div
                         className="flex-shrink-0 w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center
                                    font-mono text-xs sm:text-sm font-bold border-2"
@@ -518,6 +627,7 @@ export function TeamSection() {
                         {String(gIdx + 1).padStart(2, '0')}
                       </div>
 
+                      {/* Title */}
                       <div className="flex-1 min-w-0">
                         <h4
                           className="font-playfair font-bold text-base sm:text-lg lg:text-xl leading-tight truncate"
@@ -527,6 +637,7 @@ export function TeamSection() {
                         </h4>
                       </div>
 
+                      {/* Member count badge */}
                       <div
                         className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-full border
                                    font-semibold text-[10px] sm:text-xs uppercase tracking-widest"
@@ -536,7 +647,10 @@ export function TeamSection() {
                           background: `${COLORS.darkAlt}88`,
                         }}
                       >
-                        <span className="font-mono text-xs sm:text-sm" style={{ color: COLORS.accent }}>
+                        <span
+                          className="font-mono text-xs sm:text-sm"
+                          style={{ color: COLORS.accent }}
+                        >
                           {group.members.length}
                         </span>
                         <span className="hidden sm:inline">
@@ -588,7 +702,7 @@ export function TeamSection() {
               onClick={() => setSelectedMember(null)}
             />
 
-            {/* Modal */}
+            {/* Modal card */}
             <motion.div
               initial={{ opacity: 0, scale: 0.9, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -636,8 +750,6 @@ export function TeamSection() {
                   alt={selectedMember.name}
                   className="w-full h-full object-cover object-top"
                 />
-
-                {/* Subtle bottom gradient */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
@@ -654,7 +766,6 @@ export function TeamSection() {
                   background: COLORS.cardBgMedium,
                 }}
               >
-                {/* Top gold accent */}
                 <div
                   className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-[2px]"
                   style={{ background: COLORS.accent }}
