@@ -82,7 +82,7 @@ const ROLE_MERGE_GROUPS: {
 }[] = [
   {
     key: 'accountants',
-    label: 'Accountants',
+    label: 'Finance & Accounts Executive',
     keywords: ['accountant'],
   },
   {
