@@ -85,7 +85,7 @@ const ROLE_MERGE_GROUPS: {
   { key: 'hr', label: 'HR Department', keywords: ['human resource', 'hr '] },
   {
     key: 'it',
-    label: 'IT Department',
+    label: 'Technical Department',
     keywords: ['it ', 'information technology', 'software', 'developer', 'engineer'],
   },
   { key: 'sales', label: 'Sales Team', keywords: ['sales'] },
